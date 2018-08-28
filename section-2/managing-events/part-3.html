@@ -1,0 +1,135 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Managing events - part 3</title>
+</head>
+<body>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .container {
+    display: flex;
+  }
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+  .scoreboard {
+    display: flex;
+    margin: 0 0 10px 0;
+  }
+  .scoreboard__box {
+    border: solid;
+    width: 70px;
+    height: 50px;
+    margin: 0 10px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid;
+    height: 50px;
+    margin: 0 0 10px 0;
+  }
+  .score-form input[type=number] {
+    width: 40px;
+  }
+</style>
+<div class="container">
+  <div class="wrapper">
+    <div class="scoreboard">
+      <div class="scoreboard__box">
+        <span class="scoreboard__box__text js-score-home"></span>
+      </div>
+      <div class="scoreboard__box">
+        <span class="scoreboard__box__text js-score-away"></span>
+      </div>
+    </div>
+    <div>
+      <button class="goal__button js-home-goal">Home goal</button>
+      <button class="goal_button js-away-goal">Away goal</button>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="result js-result"></div>
+    <form class="score-form js-score-form">
+      <label for="home-input">Home score</label>
+      <input id="home-input" name="home_input" type="number" />
+      <label for="away-input">Away score</label>
+      <input id="away-input" name="away_input" type="number" />
+      <input type="submit">
+    </form>
+  </div>
+</div>
+</body>
+<script>
+  function ScoreBox(selector, initialScore) {
+    this.el = document.querySelector(selector);
+    this.score = initialScore;
+    this.render();
+  }
+  ScoreBox.prototype.setScore = function(score) {
+    this.score = parseInt(score, 10);
+    this.render();
+    this.update();
+  };
+
+  ScoreBox.prototype.render = function() {
+    this.el.textContent = this.score;
+  };
+  ScoreBox.prototype.update = function() {
+    const detail = { score: this.score };
+    const event = new CustomEvent('update', { detail });
+    this.el.dispatchEvent(event);
+  };
+
+  function Result(selector, initialScore) {
+    this.el = document.querySelector(selector);
+    this.score = initialScore;
+    this.render();
+  }
+
+  Result.prototype.setScore = function(team, score) {
+    this.score[team] = parseInt(score, 10);
+    this.render();
+  };
+
+  Result.prototype.render = function() {
+    this.el.textContent = `The result is: ${this.score.home} – ${this.score.away}`;
+  };
+
+  window.addEventListener('load', () => {
+    const initScore = { home: 0, away: 0 };
+
+    const homeScore = new ScoreBox('.js-score-home', initScore.home);
+    const awayScore = new ScoreBox('.js-score-away', initScore.away);
+    const homeGoal = document.querySelector('.js-home-goal');
+    const awayGoal = document.querySelector('.js-away-goal');
+
+    homeGoal.addEventListener('click', () => homeScore.setScore(homeScore.score + 1));
+    awayGoal.addEventListener('click', () => awayScore.setScore(awayScore.score + 1));
+
+    const result = new Result('.js-result', initScore);
+    const scoreForm = document.querySelector('.js-score-form');
+    scoreForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const form = e.currentTarget;
+      result.setScore('home', form.home_input.value || 0);
+      result.setScore('away', form.away_input.value || 0);
+    });
+
+    homeScore.el.addEventListener('update', e => result.setScore('home', e.detail.score));
+    awayScore.el.addEventListener('update', e => result.setScore('away', e.detail.score));
+  });
+</script>
+</html>
