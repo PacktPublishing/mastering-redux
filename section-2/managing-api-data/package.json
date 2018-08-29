@@ -1,0 +1,11 @@
+{
+  "name": "managing-api-data",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Rodrigo Solís",
+  "dependencies": {
+    "connect": "^3.6.6"
+  }
+}
