@@ -1,10 +1,11 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Managing API data</title>
+  <title>Solving real life problems using flux</title>
   <script type="application/javascript" src="score-box.js"></script>
   <script type="application/javascript" src="result.js"></script>
   <script type="application/javascript" src="main.js"></script>
+  <script type="application/javascript" src="store.js"></script>
 </head>
 <body>
 <style>
@@ -72,8 +73,7 @@
 <script>
   window.addEventListener('load', () => {
     window.API_URL = 'http://127.0.0.1:3000';
-    const components = main();
-    syncComponents(components);
+    main();
   });
 </script>
 </html>
