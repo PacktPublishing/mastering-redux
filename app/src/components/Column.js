@@ -1,18 +1,9 @@
-import React from 'react';
 import { Col } from 'react-styled-flexboxgrid';
 import * as Ui from 'components/UI';
-import Details from 'components/Details';
+import React from 'react';
 
 function Column(props) {
-  const {
-    type,
-    items,
-    name,
-    addItem,
-    setActiveItem,
-    updateName,
-    editDetailsEntry
-  } = props;
+  const { type, items, name, addItem, setActiveItem, updateName } = props;
   return (
     <Col xs={4}>
       <Ui.PanelTitle>{name}</Ui.PanelTitle>
@@ -34,9 +25,11 @@ function Column(props) {
                 Add more
               </Ui.Button>
             )}
-            {editDetailsEntry && (
-              <Details id={item.id} details={item.details} edit={editDetailsEntry} />
-            )}
+            <Ui.Link
+              to={{ type: 'INFO_ROUTE', payload: { level: type, id: item.id } }}
+            >
+              Info
+            </Ui.Link>
           </Ui.PanelBox>
         ))}
       </Ui.Panel>

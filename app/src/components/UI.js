@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import RFRLink from 'redux-first-router-link';
 
 export { default as Normalizr } from 'components/Normalizr';
 export { default as PanelInput } from 'components/PanelInput';
@@ -112,3 +113,23 @@ export const AddButton = p => (
     <span>+</span>
   </AddButtonContainer>
 );
+
+export const Link = styled(RFRLink)`
+  padding: 5px 2px;
+  color: ${COLORS.background};
+  background-color: ${COLORS.text};
+  border: 1px solid ${COLORS.border};
+  font-size: 10px;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin: 0 5px 0 0;
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+  
+  &:last-child {
+    margin: 0;
+  }
+`;

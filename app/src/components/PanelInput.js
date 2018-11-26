@@ -15,7 +15,6 @@ const Input = styled.input`
 
 const InputContainer = styled.div`
   margin: ${p => p.flat ? 0 : '0 0 10px'};
-  flex: 1;
 
   &::after {
     content: '';
