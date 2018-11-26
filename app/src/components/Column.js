@@ -1,6 +1,6 @@
+import React from 'react';
 import { Col } from "react-styled-flexboxgrid";
 import * as Ui from 'components/UI';
-import React from 'react';
 
 function Column(props) {
   const { type, items, name, addItem, setActiveItem } = props;
