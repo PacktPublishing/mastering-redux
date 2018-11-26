@@ -10,6 +10,7 @@
     "react-scripts": "2.0.5",
     "react-styled-flexboxgrid": "^2.6.0",
     "redux": "^4.0.1",
+    "redux-actions": "^2.6.4",
     "redux-thunk": "^2.3.0",
     "styled-components": "^4.0.2"
   },

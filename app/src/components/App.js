@@ -12,7 +12,8 @@ function App(props) {
     updateName,
     activeTeam,
     activeLeague,
-    setActiveItem
+    setActiveItem,
+    editDetailsEntry
   } = props;
   const columns = [
     {
@@ -29,6 +30,8 @@ function App(props) {
     },
   ];
 
+  const isLastColumn = index => index < columns.length - 1;
+
   return (
     <React.Fragment>
       <Ui.Main>
@@ -38,10 +41,11 @@ function App(props) {
               <Column
                 {...col}
                 key={col.name}
-                type={col.name.toLowerCase()}
                 updateName={updateName}
-                setActiveItem={i < columns.length - 1 && setActiveItem}
-                addItem={i < columns.length - 1 && addItem}
+                type={col.name.toLowerCase()}
+                addItem={isLastColumn(i) && addItem}
+                editDetailsEntry={col.name === 'Members' && editDetailsEntry}
+                setActiveItem={isLastColumn(i) && setActiveItem}
               />
             ))}
           </Row>

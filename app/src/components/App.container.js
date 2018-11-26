@@ -1,30 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import App from 'components/App';
-import {
-  addTeam,
-  addMember,
-  setActiveTeam,
-  setActiveLeague,
-  updateTeamName,
-  updateLeagueName,
-  updateMemberName
-} from 'team';
+import { addTeam, setActiveTeam, updateTeamName } from 'team';
+import { setActiveLeague, updateLeagueName } from 'league';
+import { addMember, updateMemberName, editDetailsEntry } from 'member';
 
 const mapStateToProps = state => {
-  const {
-    teams,
-    leagues,
-    members,
-    active_team: activeTeam,
-    active_league: activeLeague
-  } = state;
+  const { data: leagues, active: activeLeague } = state.league;
+  const { data: teams, active: activeTeam } = state.team;
+  const { data: members, membersDetails } = state.member;
   return {
     teams,
     leagues,
     members,
     activeTeam,
-    activeLeague
+    activeLeague,
+    membersDetails
   };
 };
 
@@ -35,7 +26,8 @@ const mapDispatchToProps = {
   updateTeamName,
   setActiveLeague,
   updateLeagueName,
-  updateMemberName
+  updateMemberName,
+  editDetailsEntry
 };
 
 class AppContainer extends React.PureComponent {
@@ -47,6 +39,7 @@ class AppContainer extends React.PureComponent {
       newItem.id = members.length + 1;
       newItem.name = 'New member';
       newItem.teamId = item.id;
+      newItem.details = { bio: '', age: '' };
       addMember(newItem);
     } else if (type === 'leagues') {
       newItem.id = teams.length + 1;
