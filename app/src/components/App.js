@@ -9,6 +9,7 @@ function App(props) {
     teams,
     members,
     addItem,
+    updateName,
     activeTeam,
     activeLeague,
     setActiveItem
@@ -31,13 +32,14 @@ function App(props) {
   return (
     <React.Fragment>
       <Ui.Main>
-        <Grid>
+        <Grid fluid>
           <Row>
             {columns.map((col, i) => (
               <Column
                 {...col}
                 key={col.name}
                 type={col.name.toLowerCase()}
+                updateName={updateName}
                 setActiveItem={i < columns.length - 1 && setActiveItem}
                 addItem={i < columns.length - 1 && addItem}
               />

@@ -1,8 +1,9 @@
 {
-  "name": "composing-reducers",
+  "name": "members-teams-leagues",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "immer": "^1.7.4",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-redux": "^5.1.0",
@@ -13,8 +14,8 @@
     "styled-components": "^4.0.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -26,5 +27,11 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "babel-plugin-styled-components": "^1.8.0",
+    "customize-cra": "^0.2.3",
+    "prettier": "^1.15.2",
+    "react-app-rewired": "^1.6.2"
+  }
 }

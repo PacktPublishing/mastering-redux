@@ -1,3 +1,5 @@
+import produce from 'immer';
+
 export const SET_ACTIVE_TEAM = 'mastering-redux/team/SET_ACTIVE_TEAM';
 export const SET_ACTIVE_LEAGUE = 'mastering-redux/team/SET_ACTIVE_LEAGUE';
 export const ADD_MEMBER = 'mastering-redux/team/ADD_MEMBER';
@@ -14,61 +16,55 @@ export const initialState = {
   active_team: null
 };
 
-export const addToList = (list, item) => [...list, item];
-
-export const addToListInState = (state, key, value) => {
-  return {
-    ...state,
-    [key]: addToList(state[key], value)
-  };
-};
-
-export const updateListInState = (state, key, id, name) => {
-  return {
-    ...state,
-    [key]: state[key].map(i => (i.id === id ? { ...i, name } : i))
-  };
+export const updateListInState = (draft, key, id, name) => {
+  const toUpdate = draft[key].find(m => m.id === id);
+  toUpdate.name = name;
 };
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case SET_ACTIVE_LEAGUE: {
-      return {
-        ...state,
-        active_league: action.payload.league,
-        active_team: null
-      };
+      return produce(state, draft => {
+        draft.active_league = action.payload.league;
+        draft.active_team = null;
+      });
     }
     case SET_ACTIVE_TEAM: {
-      return { ...state, active_team: action.payload.team };
+      return produce(state, draft => {
+        draft.active_team = action.payload.team;
+      });
     }
     case ADD_MEMBER: {
       const { member } = action.payload;
-      return addToListInState(
-        { ...state, active_team: member.teamId },
-        'members',
-        member
-      );
+      return produce(state, draft => {
+        draft.members.push(member);
+        draft.active_team = member.teamId;
+      });
     }
     case ADD_TEAM: {
       const { team } = action.payload;
-      return addToListInState(
-        { ...state, active_league: team.leagueId },
-        'teams',
-        team
-      );
+      return produce(state, draft => {
+        draft.teams.push(team);
+        draft.active_league = team.leagueId;
+      });
     }
     case UPDATE_MEMBER_NAME: {
       const { name, memberId } = action.payload;
-      return updateListInState(state, 'members', memberId, name);
+      return produce(state, draft =>
+        updateListInState(draft, 'members', memberId, name)
+      );
     }
     case UPDATE_TEAM_NAME: {
       const { name, teamId } = action.payload;
-      return updateListInState(state, 'teams', teamId, name);
+      return produce(state, draft =>
+        updateListInState(draft, 'teams', teamId, name)
+      );
     }
     case UPDATE_LEAGUE_NAME: {
       const { name, leagueId } = action.payload;
-      return updateListInState(state, 'leagues', leagueId, name);
+      return produce(state, draft =>
+        updateListInState(draft, 'leagues', leagueId, name)
+      );
     }
     default:
       return state;

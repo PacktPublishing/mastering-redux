@@ -60,6 +60,7 @@ export const PanelInput = styled.input`
   background-color: transparent;
   border: 0;
   margin: 0 0 10px;
+  outline: 0;
   
   &:focus {
     border-bottom: 1px solid ${COLORS.text};
