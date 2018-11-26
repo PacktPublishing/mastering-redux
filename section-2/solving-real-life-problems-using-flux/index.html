@@ -1,0 +1,79 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Solving real life problems using flux</title>
+  <script type="application/javascript" src="score-box.js"></script>
+  <script type="application/javascript" src="result.js"></script>
+  <script type="application/javascript" src="main.js"></script>
+  <script type="application/javascript" src="store.js"></script>
+</head>
+<body>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .container {
+    display: flex;
+  }
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+  .scoreboard {
+    display: flex;
+    margin: 0 0 10px 0;
+  }
+  .scoreboard__box {
+    border: solid;
+    width: 70px;
+    height: 50px;
+    margin: 0 10px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid;
+    height: 50px;
+    margin: 0 0 10px 0;
+  }
+  .score-form input[type=number] {
+    width: 40px;
+  }
+</style>
+<div class="container">
+  <div class="wrapper">
+    <div class="scoreboard">
+      <div class="scoreboard__box">
+        <span class="scoreboard__box__text js-score-home"></span>
+      </div>
+      <div class="scoreboard__box">
+        <span class="scoreboard__box__text js-score-away"></span>
+      </div>
+    </div>
+    <div>
+      <button class="goal__button js-home-goal">Update Home goal</button>
+      <button class="goal_button js-away-goal">Update Away goals</button>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="result js-result"></div>
+    <button class="js-result-button">Update results</button>
+  </div>
+</div>
+</body>
+<script>
+  window.addEventListener('load', () => {
+    window.API_URL = 'http://127.0.0.1:3000';
+    main();
+  });
+</script>
+</html>
