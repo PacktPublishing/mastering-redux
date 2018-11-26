@@ -1,9 +1,9 @@
-const SET_ACTIVE_TEAM = 'mastering-redux/team/SET_ACTIVE_TEAM';
-const SET_ACTIVE_LEAGUE = 'mastering-redux/team/SET_ACTIVE_LEAGUE';
-const ADD_MEMBER = 'mastering-redux/team/ADD_MEMBER';
-const ADD_TEAM = 'mastering-redux/team/ADD_TEAM';
+export const SET_ACTIVE_TEAM = 'mastering-redux/team/SET_ACTIVE_TEAM';
+export const SET_ACTIVE_LEAGUE = 'mastering-redux/team/SET_ACTIVE_LEAGUE';
+export const ADD_MEMBER = 'mastering-redux/team/ADD_MEMBER';
+export const ADD_TEAM = 'mastering-redux/team/ADD_TEAM';
 
-const initialState = {
+export const initialState = {
   members: [
     { id: 1, name: 'Member 1', teamId: 1 }
   ],
@@ -18,9 +18,9 @@ const initialState = {
   active_team: null
 };
 
-const addToList = (list, item) => [...list, item];
+export const addToList = (list, item) => [...list, item];
 
-const addToListInState = (state, key, value) => {
+export const addToListInState = (state, key, value) => {
   return {
     ...state,
     [key]: addToList(state[key], value)
@@ -36,7 +36,7 @@ export default function reducer(state = initialState, action) {
       return { ...state, active_team: action.payload.team };
     }
     case ADD_MEMBER: {
-      return { ...state, members: addToList(state.members, action.payload.member) };
+      return addToListInState(state, 'members', action.payload.member);
     }
     case ADD_TEAM: {
       return addToListInState(state, 'teams', action.payload.team);
