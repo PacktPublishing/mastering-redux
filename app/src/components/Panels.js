@@ -6,26 +6,20 @@ function Panels(props) {
   const {
     leagues,
     teams,
-    members,
-    addItem,
-    updateName,
-    activeTeam,
-    activeLeague,
-    setActiveItem,
-    editDetailsEntry
+    members
   } = props;
   const columns = [
     {
       items: leagues,
-      name: 'Leagues'
+      type: 'league'
     },
     {
-      items: teams.filter(t => t.leagueId === activeLeague),
-      name: 'Teams'
+      items: teams,
+      type: 'team'
     },
     {
-      items: members.filter(m => m.teamId === activeTeam),
-      name: 'Members'
+      items: members,
+      type: 'member'
     },
   ];
 
@@ -35,13 +29,10 @@ function Panels(props) {
     <Row>
       {columns.map((col, i) => (
         <Column
-          {...col}
-          key={col.name}
-          updateName={updateName}
-          type={col.name.toLowerCase()}
-          addItem={isLastColumn(i) && addItem}
-          editDetailsEntry={col.name === 'Members' && editDetailsEntry}
-          setActiveItem={isLastColumn(i) && setActiveItem}
+          key={col.type}
+          type={col.type}
+          items={col.items}
+          name={`${col.type}s`}
         />
       ))}
     </Row>

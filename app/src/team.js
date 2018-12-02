@@ -7,14 +7,13 @@ export const SET_ACTIVE_TEAM = 'mastering-redux/team/SET_ACTIVE_TEAM';
 export const ADD_TEAM = 'mastering-redux/team/ADD_TEAM';
 export const UPDATE_TEAM_NAME = 'mastering-redux/team/UPDATE_TEAM_NAME';
 
-export const initialState = {
-  data: [{ id: 1, name: 'Team 1', leagueId: 1 }],
-  active: null
-};
+const defaultTeam = { name: 'New Team' };
 
-export const updateListInState = (data, id, name) => {
-  const toUpdate = data.find(m => m.id === id);
-  toUpdate.name = name;
+export const initialState = {
+  data: {
+    1: { id: 1, name: 'Team 1', leagueId: 1 }
+  },
+  active: null
 };
 
 export default function reducer(state = initialState, action) {
@@ -30,9 +29,10 @@ export default function reducer(state = initialState, action) {
       });
     }
     case ADD_TEAM: {
-      const team = action.payload;
+      const { leagueId } = action.payload;
       return produce(state, draft => {
-        draft.data.push(team);
+        const teamId = Object.keys(draft.data).length + 1;
+        draft.data[teamId] = { ...defaultTeam, leagueId, id: teamId };
       });
     }
     case ADD_MEMBER: {
@@ -42,9 +42,10 @@ export default function reducer(state = initialState, action) {
     }
     case UPDATE_TEAM_NAME: {
       const { name, teamId } = action.payload;
-      return produce(state, draft =>
-        updateListInState(draft.data, teamId, name)
-      );
+      return produce(state, draft => {
+        const item = draft.data[teamId];
+        item.name = name;
+      });
     }
     default:
       return state;

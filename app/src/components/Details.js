@@ -17,7 +17,7 @@ class Details extends React.PureComponent {
         </DetailsHeader>
         <DetailsList>
           {Object.entries(details).map(([key, value]) => (
-            <DetailsListItem>
+            <DetailsListItem key={key}>
               <DetailsKey>{key}:</DetailsKey>
               <Ui.PanelInput
                 flat

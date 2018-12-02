@@ -4,10 +4,11 @@ import { editDetailsEntry } from 'member';
 
 const mapStateToProps = state => {
   const { payload: { level, id } } = state.location;
-  const key = level.slice(0, -1);
-  const item = state[key].data.find(i => i.id === parseInt(id, 10));
+  const entity = state[level];
+  const details = entity.details ? entity.details[id] : null;
   return {
-    item,
+    id,
+    details,
     name: level
   }
 };

@@ -1,37 +1,15 @@
 import { Col } from 'react-styled-flexboxgrid';
 import * as Ui from 'components/UI';
 import React from 'react';
+import ColumnItem from 'components/ColumnItem.container';
 
 function Column(props) {
-  const { type, items, name, addItem, setActiveItem, updateName } = props;
+  const { type, items, name } = props;
   return (
     <Col xs={4}>
       <Ui.PanelTitle>{name}</Ui.PanelTitle>
       <Ui.Panel>
-        {items.map(item => (
-          <Ui.PanelBox key={item.id} disabled={!addItem && !setActiveItem}>
-            <Ui.PanelInput
-              type="text"
-              value={item.name}
-              onChange={e => updateName(e.target.value, item, type)}
-            />
-            {setActiveItem && (
-              <Ui.Button onClick={() => setActiveItem(item, type)}>
-                Open
-              </Ui.Button>
-            )}
-            {addItem && (
-              <Ui.Button onClick={() => addItem(item, type)}>
-                Add more
-              </Ui.Button>
-            )}
-            <Ui.Link
-              to={{ type: 'INFO_ROUTE', payload: { level: type, id: item.id } }}
-            >
-              Info
-            </Ui.Link>
-          </Ui.PanelBox>
-        ))}
+        {items.map(item => <ColumnItem key={item} id={item} type={type} /> )}
       </Ui.Panel>
     </Col>
   );

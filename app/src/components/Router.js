@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 const mapStateToProps = state => {
   const { type, routesMap } = state.location;
-  console.log(type, routesMap);
   return { route: routesMap[type] };
 };
 

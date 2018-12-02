@@ -19,7 +19,7 @@ describe('League reducer', () => {
     const name = `test_league`;
     const action = { type: UPDATE_LEAGUE_NAME, payload: { leagueId: 1, name } };
     const newState = reducer(initialState, action);
-    const updated = newState.data.find(item => item.id === 1);
+    const updated = newState.data[1];
     expect(updated.name).toMatch(name);
   });
 
