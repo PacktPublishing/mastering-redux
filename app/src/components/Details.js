@@ -5,7 +5,7 @@ import * as Ui from 'components/UI';
 class Details extends React.PureComponent {
   onChange = e => {
     const { edit, id } = this.props;
-    edit({ name: e.target.name, value: e.target.value, id });
+    edit({ name: e.target.name, content: e.target.value, id });
   };
 
   render() {
