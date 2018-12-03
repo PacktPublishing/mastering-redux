@@ -23,8 +23,6 @@ function Panels(props) {
     },
   ];
 
-  const isLastColumn = index => index < columns.length - 1;
-
   return (
     <Row>
       {columns.map((col, i) => (
