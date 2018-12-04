@@ -6,28 +6,29 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import reducerRegistry from 'reducerRegistry';
 import { locationReducer, locationMiddleware, locationEnhancer } from 'router';
-import { initialState as league } from 'league';
-import { initialState as team } from 'team';
-import { initialState as member } from 'member';
 
 const composeEnhancers =
   (process.env.NODE_ENV === 'development' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
   compose;
 
-const initialState = {
-  league,
-  team,
-  member
-};
 reducerRegistry.register('location', locationReducer);
+
+const getRehydratedState = () => {
+  const serialized = localStorage.getItem('mastering_redux_app_state');
+  return serialized ? JSON.parse(serialized) : undefined;
+};
+
+const rehydratedState = getRehydratedState();
 
 const combine = (reducers) => {
   const reducerNames = Object.keys(reducers);
-  Object.keys(initialState).forEach(item => {
-    if (reducerNames.indexOf(item) === -1) {
-      reducers[item] = (state = null) => state;
-    }
-  });
+  if (rehydratedState) {
+    Object.keys(rehydratedState).forEach(item => {
+      if (!reducerNames.includes(item)) {
+        reducers[item] = (state = null) => state;
+      }
+    });
+  }
   return combineReducers(reducers);
 };
 
@@ -35,7 +36,7 @@ const reducer = combine(reducerRegistry.getReducers());
 
 const store = createStore(
   reducer,
-  undefined,
+  rehydratedState,
   composeEnhancers(
     locationEnhancer,
     applyMiddleware(locationMiddleware, thunk)

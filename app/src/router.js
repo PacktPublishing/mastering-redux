@@ -3,10 +3,14 @@ import { connectRoutes } from 'redux-first-router';
 export const routesMap = {
   HOME_ROUTE: {
     path: '/',
+    page: 'Home'
+  },
+  PANEL_ROUTE: {
+    path: '/app',
     page: 'Panels.container'
   },
   INFO_ROUTE: {
-    path: '/:level/:id/info',
+    path: '/app/:level/:id/info',
     page: 'Info.container'
   }
 };

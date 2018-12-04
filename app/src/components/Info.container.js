@@ -4,7 +4,7 @@ import { editDetailsEntry } from 'member';
 
 const mapStateToProps = state => {
   const { payload: { level, id } } = state.location;
-  const entity = state[level];
+  const entity = state[level] || {};
   const details = entity.details ? entity.details[id] : null;
   return {
     id,
