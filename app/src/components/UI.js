@@ -32,14 +32,10 @@ export const Main = styled.main`
 `;
 
 export const Panel = styled.div`
-  display: flex;
-  flex-direction: column;
   margin: 22px 0 0;
   width: 100%;
-  height: 500px;
   border: 1px solid ${COLORS.border};
   border-radius: 4px;
-  overflow: auto;
 `;
 
 export const PanelTitle = styled.p`
@@ -50,7 +46,6 @@ export const PanelTitle = styled.p`
 
 export const PanelBox = styled.div`
   padding: 8px;
-  width: 100%;
   border: 0;
   border-bottom: solid 1px ${COLORS.border};
 
@@ -61,7 +56,7 @@ export const PanelBox = styled.div`
 `;
 
 export const Button = styled.button`
-  display: flex;
+  display: inline-flex;
   padding: 5px 2px;
   color: ${COLORS.text};
   background-color: transparent;

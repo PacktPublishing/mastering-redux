@@ -6,8 +6,10 @@ import { addMember, editDetailsEntry, updateMemberName } from 'member';
 import { setActiveLeague, updateLeagueName } from 'league';
 
 function mapStateToProps(state, ownProps) {
-  const item = state[ownProps.type].data[ownProps.id];
-  return { item };
+  const { type, items } = ownProps.data;
+  const id = items[ownProps.index];
+  const item = state[type].data[id];
+  return { item, type, id };
 }
 
 const mapDispatchToProps = {

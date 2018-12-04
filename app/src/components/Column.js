@@ -2,14 +2,22 @@ import { Col } from 'react-styled-flexboxgrid';
 import * as Ui from 'components/UI';
 import React from 'react';
 import ColumnItem from 'components/ColumnItem.container';
+import { FixedSizeList as List } from 'react-window';
 
 function Column(props) {
-  const { type, items, name } = props;
+  const { items, name, type } = props;
   return (
     <Col xs={4}>
       <Ui.PanelTitle>{name}</Ui.PanelTitle>
       <Ui.Panel>
-        {items.map(item => <ColumnItem key={item} id={item} type={type} /> )}
+        <List
+          itemData={{ type, items }}
+          height={300}
+          itemCount={items.length}
+          itemSize={90}
+        >
+          {ColumnItem}
+        </List>
       </Ui.Panel>
     </Col>
   );

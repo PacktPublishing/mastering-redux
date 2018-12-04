@@ -2,9 +2,9 @@ import React from 'react';
 import * as Ui from 'components/UI';
 
 function ColumnItem(props) {
-  const { type, item, addItem, setActiveItem, updateName } = props;
+  const { type, item, addItem, setActiveItem, updateName, style } = props;
   return (
-    <Ui.PanelBox disabled={!addItem && !setActiveItem}>
+    <Ui.PanelBox disabled={!addItem && !setActiveItem} style={style}>
       <Ui.PanelInput
         type="text"
         value={item.name}
@@ -29,4 +29,4 @@ function ColumnItem(props) {
   );
 }
 
-export default ColumnItem;
+export default React.memo(ColumnItem);
