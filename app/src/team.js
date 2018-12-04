@@ -2,10 +2,13 @@ import produce from 'immer';
 import { createAction } from 'redux-actions';
 import { SET_ACTIVE_LEAGUE } from 'league';
 import { ADD_MEMBER } from 'member';
+import reducerRegistry from 'reducerRegistry';
 
-export const SET_ACTIVE_TEAM = 'mastering-redux/team/SET_ACTIVE_TEAM';
-export const ADD_TEAM = 'mastering-redux/team/ADD_TEAM';
-export const UPDATE_TEAM_NAME = 'mastering-redux/team/UPDATE_TEAM_NAME';
+const reducerName = 'team';
+
+export const SET_ACTIVE_TEAM = `mastering-redux/${reducerName}/SET_ACTIVE_TEAM`;
+export const ADD_TEAM = `mastering-redux/${reducerName}/ADD_TEAM`;
+export const UPDATE_TEAM_NAME = `mastering-redux/${reducerName}/UPDATE_TEAM_NAME`;
 
 const defaultTeam = { name: 'New Team' };
 
@@ -51,6 +54,8 @@ export default function reducer(state = initialState, action) {
       return state;
   }
 }
+
+reducerRegistry.register(reducerName, reducer);
 
 export const setActiveTeam = createAction(SET_ACTIVE_TEAM, team => team.id);
 

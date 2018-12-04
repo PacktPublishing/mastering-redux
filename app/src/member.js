@@ -1,10 +1,12 @@
 import produce from 'immer';
 import { createAction } from 'redux-actions';
+import reducerRegistry from 'reducerRegistry';
 
-export const ADD_MEMBER = 'mastering-redux/member/ADD_MEMBER';
-export const UPDATE_MEMBER_NAME = 'mastering-redux/member/UPDATE_MEMBER_NAME';
-export const EDIT_DETAILS_ENTRY =
-  'mastering-redux/member/EDIT_DETAILS_ENTRY';
+const reducerName = 'member';
+
+export const ADD_MEMBER = `mastering-redux/${reducerName}/ADD_MEMBER`;
+export const UPDATE_MEMBER_NAME = `mastering-redux/${reducerName}/UPDATE_MEMBER_NAME`;
+export const EDIT_DETAILS_ENTRY = `mastering-redux/${reducerName}/EDIT_DETAILS_ENTRY`;
 
 const defaultMember = { name: 'New Member' };
 const defaultDetails = { bio: '', age: '' };
@@ -44,6 +46,8 @@ export default function reducer(state = initialState, action) {
       return state;
   }
 }
+
+reducerRegistry.register(reducerName, reducer);
 
 export const addMember = createAction(ADD_MEMBER);
 export const updateMemberName = createAction(

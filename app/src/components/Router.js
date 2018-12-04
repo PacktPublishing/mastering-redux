@@ -7,9 +7,34 @@ const mapStateToProps = state => {
 };
 
 class Router extends React.PureComponent {
-  render() {
+  state = {
+    Page: null,
+    currentPage: null
+  };
+
+  componentDidMount() {
+    this.loadPage();
+  }
+
+  componentDidUpdate(prevProps) {
+    if(prevProps.route !== this.props.route) {
+      this.loadPage();
+    }
+  }
+
+  loadPage() {
     const { route } = this.props;
-    const Page = route.page;
+    import(`components/${route.page}.js`)
+      .then(module => this.setState({
+        Page: module.default,
+        currentPage: route.page
+      }));
+  }
+
+  render() {
+    const { Page, currentPage } = this.state;
+    const { route } = this.props;
+    if (currentPage !== route.page) return null;
     return (<Page />);
   }
 }

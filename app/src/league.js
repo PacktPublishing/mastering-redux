@@ -1,9 +1,12 @@
 import produce from 'immer';
 import { createAction } from 'redux-actions';
 import { ADD_TEAM } from 'team';
+import reducerRegistry from 'reducerRegistry';
 
-export const SET_ACTIVE_LEAGUE = 'mastering-redux/league/SET_ACTIVE_LEAGUE';
-export const UPDATE_LEAGUE_NAME = 'mastering-redux/league/UPDATE_LEAGUE_NAME';
+const reducerName = 'league';
+
+export const SET_ACTIVE_LEAGUE = `mastering-redux/${reducerName}/SET_ACTIVE_LEAGUE`;
+export const UPDATE_LEAGUE_NAME = `mastering-redux/${reducerName}/UPDATE_LEAGUE_NAME`;
 
 export const initialState = {
   data: {
@@ -36,6 +39,8 @@ export default function reducer(state = initialState, action) {
       return state;
   }
 }
+
+reducerRegistry.register(reducerName, reducer);
 
 export const setActiveLeague = createAction(
   SET_ACTIVE_LEAGUE,
