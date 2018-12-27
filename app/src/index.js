@@ -34,12 +34,20 @@ const combine = (reducers) => {
 
 const reducer = combine(reducerRegistry.getReducers());
 
+const loggerMiddleware = store => next => action => {
+  console.info('prev state', store.getState());
+  console.info('action', action);
+  const result = next(action);
+  console.info('next state', store.getState());
+  return result;
+};
+
 const store = createStore(
   reducer,
   rehydratedState,
   composeEnhancers(
     locationEnhancer,
-    applyMiddleware(locationMiddleware, thunk)
+    applyMiddleware(locationMiddleware, thunk, loggerMiddleware)
   )
 );
 
