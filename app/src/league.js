@@ -19,7 +19,9 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case SET_LEAGUE_DATA: {
       return produce(state, draft => {
-        draft.data = action.payload.reduce((acc, next) => ({...acc, [next.id]: next }), {});
+        action.payload.forEach(item => {
+          draft.data[item.id] = item;
+        })
       });
     }
     case SET_ACTIVE_LEAGUE: {

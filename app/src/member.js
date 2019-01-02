@@ -21,7 +21,10 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case SET_MEMBER_DATA: {
       return produce(state, draft => {
-        draft.data = action.payload.reduce((acc, next) => ({...acc, [next.id]: next }), {});
+        action.payload.forEach(item => {
+          draft.data[item.id] = item;
+          draft.details[item.id] = defaultDetails;
+        })
       });
     }
     case ADD_MEMBER: {
