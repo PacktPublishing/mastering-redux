@@ -80,6 +80,23 @@ export const updateTeamName = createAction(
 
 export const getTeamData = () => async dispatch => {
   const teams = await API('teams');
-  dispatch(setTeamData(teams));
+  if (teams) dispatch(setTeamData(teams));
 };
 
+export const postTeamData = ({ leagueId }) => async (dispatch, getState) => {
+  const { data } = getState().team;
+  const teamId = Object.keys(data).length + 1;
+  const team = { ...defaultTeam, leagueId, id: teamId };
+  await API.post('teams', team);
+
+  dispatch(addTeam({ leagueId }));
+
+};
+
+export const putTeamName = (name, teamId) => async (dispatch, getState) => {
+  const { data } = getState().team;
+  const newTeam = { ...data[teamId], name };
+  await API.put(`teams/${teamId}`, newTeam);
+
+  dispatch(updateTeamName(name, teamId));
+};

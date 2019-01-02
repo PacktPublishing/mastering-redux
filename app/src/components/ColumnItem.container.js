@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import ColumnItem from 'components/ColumnItem';
-import { addTeam, setActiveTeam, updateTeamName } from 'team';
-import { addMember, editDetailsEntry, updateMemberName } from 'member';
+import { postTeamData, setActiveTeam, putTeamName } from 'team';
+import { postMemberData, putMemberName } from 'member';
 import { setActiveLeague, updateLeagueName } from 'league';
 
 function mapStateToProps(state, ownProps) {
@@ -13,14 +13,13 @@ function mapStateToProps(state, ownProps) {
 }
 
 const mapDispatchToProps = {
-  addTeam,
-  addMember,
   setActiveTeam,
-  updateTeamName,
   setActiveLeague,
   updateLeagueName,
-  updateMemberName,
-  editDetailsEntry
+  updateMemberName: putMemberName,
+  addTeam: postTeamData,
+  addMember: postMemberData,
+  updateTeamName: putTeamName
 };
 
 class ColumnItemContainer extends React.PureComponent {

@@ -19,8 +19,9 @@ function createLocaleStorageEnhancer() {
     return undefined;
   }
 
-  function setLocalStorageState(state) {
+  function setLocalStorageState(state, action) {
     const newState = JSON.stringify(state);
+    console.info(`${action.type} state change ––- saving state to localStorage.`);
     localStorage.setItem(STATE_KEY, newState);
   }
 
@@ -35,7 +36,7 @@ function createLocaleStorageEnhancer() {
       dispatch(action) {
         store.dispatch(action);
         const result = store.getState();
-        setLocalStorageState(result);
+        setLocalStorageState(result, action);
       }
     }
   };

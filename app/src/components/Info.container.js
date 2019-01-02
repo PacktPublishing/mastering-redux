@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import Info from 'components/Info';
-import { editDetailsEntry } from 'member';
+import { putMemberDetails } from 'member';
 
 const mapStateToProps = state => {
   const { payload: { level, id } } = state.location;
@@ -14,7 +14,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  edit: editDetailsEntry
+  edit: putMemberDetails
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Info);

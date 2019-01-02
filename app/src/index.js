@@ -30,10 +30,10 @@ const combine = (reducers) => {
 
 const reducer = combine(reducerRegistry.getReducers());
 
-const enhancer = composeEnhancers(localStorageEnhancer, locationEnhancer, applyMiddleware(locationMiddleware, thunk, loggerMiddleware));
+const enhancer = composeEnhancers(locationEnhancer, applyMiddleware(locationMiddleware, thunk, loggerMiddleware), localStorageEnhancer);
 
 // const middlewareEnhancer = applyMiddleware(locationMiddleware, thunk, loggerMiddleware);
-// const enhancer = cs => locationEnhancer(middlewareEnhancer(cs));
+// const enhancer = cs => locationEnhancer(middlewareEnhancer(localStorageEnhancer(cs)));
 
 const store = createStore(
   reducer,

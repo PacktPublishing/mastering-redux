@@ -21,9 +21,9 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case SET_MEMBER_DATA: {
       return produce(state, draft => {
-        action.payload.forEach(item => {
+        action.payload.forEach(({ details, ...item }) => {
           draft.data[item.id] = item;
-          draft.details[item.id] = defaultDetails;
+          draft.details[item.id] = details || defaultDetails;
         })
       });
     }
@@ -67,5 +67,31 @@ export const editDetailsEntry = createAction(EDIT_DETAILS_ENTRY);
 
 export const getMemberData = () => async dispatch => {
   const members = await API('members');
-  dispatch(setMemberData(members));
+  if (members) dispatch(setMemberData(members));
+};
+
+export const postMemberData = ({ teamId }) => async (dispatch, getState) => {
+  const { data } = getState().member;
+  const memberId = Object.keys(data).length + 1;
+  const member = { ...defaultMember, teamId, id: memberId, details: defaultDetails };
+
+  await API.post('members', member);
+
+  dispatch(addMember({ teamId }));
+};
+
+export const putMemberName = (name, memberId) => async (dispatch, getState) => {
+  const { data } = getState().member;
+  const newMember = { ...data[memberId], name };
+  await API.put(`members/${memberId}`, newMember);
+
+  dispatch(updateMemberName(name, memberId));
+};
+
+export const putMemberDetails = ({ name, content, id }) => async (dispatch, getState) => {
+  const { details, data } = getState().member;
+  const newMember = { ...data[id], details: { ...details[id], [name]: content } };
+  await API.put(`members/${id}`, newMember);
+
+  dispatch(editDetailsEntry({ name, content, id }));
 };

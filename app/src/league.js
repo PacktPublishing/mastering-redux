@@ -63,5 +63,5 @@ export const updateLeagueName = createAction(
 
 export const getLeagueData = () => async dispatch => {
   const leagues = await API('leagues');
-  dispatch(setLeagueData(leagues));
+  if (leagues) dispatch(setLeagueData(leagues));
 };
