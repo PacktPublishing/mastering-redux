@@ -42,13 +42,15 @@ const loggerMiddleware = store => next => action => {
   return result;
 };
 
+const enhancer = composeEnhancers(locationEnhancer, applyMiddleware(locationMiddleware, thunk, loggerMiddleware));
+
+// const middlewareEnhancer = applyMiddleware(locationMiddleware, thunk, loggerMiddleware);
+// const enhancer = cs => locationEnhancer(middlewareEnhancer(cs));
+
 const store = createStore(
   reducer,
   rehydratedState,
-  composeEnhancers(
-    locationEnhancer,
-    applyMiddleware(locationMiddleware, thunk, loggerMiddleware)
-  )
+  enhancer
 );
 
 reducerRegistry.setChangeListener(reducers => {
