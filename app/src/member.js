@@ -1,9 +1,11 @@
 import produce from 'immer';
 import { createAction } from 'redux-actions';
 import reducerRegistry from 'reducerRegistry';
+import API from 'api.service';
 
 const reducerName = 'member';
 
+export const SET_MEMBER_DATA = `mastering-redux/${reducerName}/SET_MEMBER_DATA`;
 export const ADD_MEMBER = `mastering-redux/${reducerName}/ADD_MEMBER`;
 export const UPDATE_MEMBER_NAME = `mastering-redux/${reducerName}/UPDATE_MEMBER_NAME`;
 export const EDIT_DETAILS_ENTRY = `mastering-redux/${reducerName}/EDIT_DETAILS_ENTRY`;
@@ -11,16 +13,17 @@ export const EDIT_DETAILS_ENTRY = `mastering-redux/${reducerName}/EDIT_DETAILS_E
 const defaultMember = { name: 'New Member' };
 const defaultDetails = { bio: '', age: '' };
 export const initialState = {
-  data: {
-    1: { id: 1, name: 'Member 1', teamId: 1 }
-  },
-  details: {
-    1: defaultDetails
-  }
+  data: {},
+  details: {}
 };
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
+    case SET_MEMBER_DATA: {
+      return produce(state, draft => {
+        draft.data = action.payload.reduce((acc, next) => ({...acc, [next.id]: next }), {});
+      });
+    }
     case ADD_MEMBER: {
       const { teamId } = action.payload;
       return produce(state, draft => {
@@ -49,9 +52,17 @@ export default function reducer(state = initialState, action) {
 
 reducerRegistry.register(reducerName, reducer);
 
+export const setMemberData = createAction(SET_MEMBER_DATA);
 export const addMember = createAction(ADD_MEMBER);
 export const updateMemberName = createAction(
   UPDATE_MEMBER_NAME,
   (name, memberId) => ({ name, memberId })
 );
 export const editDetailsEntry = createAction(EDIT_DETAILS_ENTRY);
+
+// thunk
+
+export const getMemberData = () => async dispatch => {
+  const members = await API('members');
+  dispatch(setMemberData(members));
+};

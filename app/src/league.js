@@ -2,22 +2,26 @@ import produce from 'immer';
 import { createAction } from 'redux-actions';
 import { ADD_TEAM } from 'team';
 import reducerRegistry from 'reducerRegistry';
+import API from 'api.service';
 
 const reducerName = 'league';
 
+export const SET_LEAGUE_DATA = `mastering-redux/${reducerName}/SET_LEAGUE_DATA`;
 export const SET_ACTIVE_LEAGUE = `mastering-redux/${reducerName}/SET_ACTIVE_LEAGUE`;
 export const UPDATE_LEAGUE_NAME = `mastering-redux/${reducerName}/UPDATE_LEAGUE_NAME`;
 
 export const initialState = {
-  data: {
-    1: { id: 1, name: 'League 1' },
-    2: { id: 2, name: 'League 2' }
-  },
+  data: {},
   active: null
 };
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
+    case SET_LEAGUE_DATA: {
+      return produce(state, draft => {
+        draft.data = action.payload.reduce((acc, next) => ({...acc, [next.id]: next }), {});
+      });
+    }
     case SET_ACTIVE_LEAGUE: {
       return produce(state, draft => {
         draft.active = action.payload;
@@ -42,6 +46,8 @@ export default function reducer(state = initialState, action) {
 
 reducerRegistry.register(reducerName, reducer);
 
+export const setLeagueData = createAction(SET_LEAGUE_DATA);
+
 export const setActiveLeague = createAction(
   SET_ACTIVE_LEAGUE,
   league => league.id
@@ -50,3 +56,10 @@ export const updateLeagueName = createAction(
   UPDATE_LEAGUE_NAME,
   (name, leagueId) => ({ name, leagueId })
 );
+
+// thunk
+
+export const getLeagueData = () => async dispatch => {
+  const leagues = await API('leagues');
+  dispatch(setLeagueData(leagues));
+};

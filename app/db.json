@@ -1,0 +1,5 @@
+{
+  "leagues": [{ "id": 1, "name": "League 1" }, { "id": 2, "name": "League 2" }],
+  "teams": [{ "id": 1, "name": "Team 1", "leagueId": 1 }],
+  "members": [{ "id": 1, "name": "Member 1", "teamId": 1 }]
+}

@@ -5,9 +5,17 @@ import reducer, {
 } from 'league';
 import { ADD_TEAM } from 'team';
 
+const defaultState = {
+  ...initialState,
+  data: {
+    1: { id: 1, name: 'League 1' },
+    2: { id: 2, name: 'League 2' }
+  }
+};
+
 describe('League reducer', () => {
   const league = 4;
-  const state = { ...initialState, active: league };
+  const state = { ...defaultState, active: league };
 
   it(`Test ${SET_ACTIVE_LEAGUE} action`, () => {
     const action = { type: SET_ACTIVE_LEAGUE, payload: 3 };
@@ -18,7 +26,7 @@ describe('League reducer', () => {
   test(`Test ${UPDATE_LEAGUE_NAME} action`, () => {
     const name = `test_league`;
     const action = { type: UPDATE_LEAGUE_NAME, payload: { leagueId: 1, name } };
-    const newState = reducer(initialState, action);
+    const newState = reducer(defaultState, action);
     const updated = newState.data[1];
     expect(updated.name).toMatch(name);
   });

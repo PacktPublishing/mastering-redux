@@ -3,9 +3,12 @@ import { createAction } from 'redux-actions';
 import { SET_ACTIVE_LEAGUE } from 'league';
 import { ADD_MEMBER } from 'member';
 import reducerRegistry from 'reducerRegistry';
+import API from 'api.service';
 
 const reducerName = 'team';
 
+
+export const SET_TEAM_DATA = `mastering-redux/${reducerName}/SET_TEAM_DATA`;
 export const SET_ACTIVE_TEAM = `mastering-redux/${reducerName}/SET_ACTIVE_TEAM`;
 export const ADD_TEAM = `mastering-redux/${reducerName}/ADD_TEAM`;
 export const UPDATE_TEAM_NAME = `mastering-redux/${reducerName}/UPDATE_TEAM_NAME`;
@@ -13,14 +16,17 @@ export const UPDATE_TEAM_NAME = `mastering-redux/${reducerName}/UPDATE_TEAM_NAME
 const defaultTeam = { name: 'New Team' };
 
 export const initialState = {
-  data: {
-    1: { id: 1, name: 'Team 1', leagueId: 1 }
-  },
+  data: {},
   active: null
 };
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
+    case SET_TEAM_DATA: {
+      return produce(state, draft => {
+        draft.data = action.payload.reduce((acc, next) => ({...acc, [next.id]: next }), {});
+      });
+    }
     case SET_ACTIVE_TEAM: {
       return produce(state, draft => {
         draft.active = action.payload;
@@ -57,6 +63,8 @@ export default function reducer(state = initialState, action) {
 
 reducerRegistry.register(reducerName, reducer);
 
+export const setTeamData = createAction(SET_TEAM_DATA);
+
 export const setActiveTeam = createAction(SET_ACTIVE_TEAM, team => team.id);
 
 export const addTeam = createAction(ADD_TEAM);
@@ -65,3 +73,11 @@ export const updateTeamName = createAction(
   UPDATE_TEAM_NAME,
   (name, teamId) => ({ name, teamId })
 );
+
+// thunk
+
+export const getTeamData = () => async dispatch => {
+  const teams = await API('teams');
+  dispatch(setTeamData(teams));
+};
+

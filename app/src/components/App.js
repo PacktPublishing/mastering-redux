@@ -7,8 +7,8 @@ function App() {
   return (
     <Ui.Main>
       <Grid fluid>
-        <Router />
-        <Ui.Normalizr />
+        <Router/>
+        <Ui.Normalizr/>
       </Grid>
     </Ui.Main>
   );

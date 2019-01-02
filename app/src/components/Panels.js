@@ -4,33 +4,18 @@ import Column from 'components/Column';
 
 function Panels(props) {
   const {
-    leagues,
-    teams,
-    members
+    columns,
+    getInitialData
   } = props;
-  const columns = [
-    {
-      items: leagues,
-      type: 'league'
-    },
-    {
-      items: teams,
-      type: 'team'
-    },
-    {
-      items: members,
-      type: 'member'
-    },
-  ];
-
   return (
     <Row>
-      {columns.map((col, i) => (
+      {columns.map(col => (
         <Column
           key={col.type}
           type={col.type}
           items={col.items}
           name={`${col.type}s`}
+          getInitialData={getInitialData[col.type]}
         />
       ))}
     </Row>

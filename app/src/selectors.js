@@ -28,3 +28,21 @@ export const getActiveMembersIds = createSelector(
     return activeMembers.map(m => m.id);
   }
 );
+
+export const getPanelColumns = createSelector(
+  [getLeaguesIds, getActiveTeamsIds, getActiveMembersIds],
+  (leagues, teams, members) => [
+    {
+      items: leagues,
+      type: 'league'
+    },
+    {
+      items: teams,
+      type: 'team'
+    },
+    {
+      items: members,
+      type: 'member'
+    }
+  ]
+);

@@ -7,8 +7,15 @@ import reducer, {
 import { SET_ACTIVE_LEAGUE } from 'league';
 import { ADD_MEMBER } from 'member';
 
+const defaultState = {
+  ...initialState,
+  data: {
+    1: { id: 1, name: 'Team 1', leagueId: 1 }
+  }
+};
+
 describe('Team reducer', () => {
-  const state = { ...initialState, active: 2 };
+  const state = { ...defaultState, active: 2 };
 
   it(`Test ${SET_ACTIVE_TEAM} action`, () => {
     const action = { type: SET_ACTIVE_TEAM, payload: 1 };
@@ -23,7 +30,7 @@ describe('Team reducer', () => {
   });
 
   it(`Test ${ADD_TEAM} action`, () => {
-    const teamId = Object.keys(initialState.data).length + 1;
+    const teamId = Object.keys(defaultState.data).length + 1;
     const newTeam = { leagueId: 5 };
     const action = { type: ADD_TEAM, payload: newTeam };
     const newState = reducer(state, action);
@@ -46,7 +53,7 @@ describe('Team reducer', () => {
   test(`Test ${UPDATE_TEAM_NAME} action`, () => {
     const name = `test_team`;
     const action = { type: UPDATE_TEAM_NAME, payload: { teamId: 1, name } };
-    const newState = reducer(initialState, action);
+    const newState = reducer(defaultState, action);
     const updated = newState.data[1];
     expect(updated.name).toMatch(name);
   });
