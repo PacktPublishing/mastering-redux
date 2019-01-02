@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import reducerRegistry from 'reducerRegistry';
 import { locationReducer, locationMiddleware, locationEnhancer } from 'router';
+import { loggerMiddleware, localStorageEnhancer } from 'store-utils';
 
 const composeEnhancers =
   (process.env.NODE_ENV === 'development' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
@@ -13,12 +14,7 @@ const composeEnhancers =
 
 reducerRegistry.register('location', locationReducer);
 
-const getRehydratedState = () => {
-  const serialized = localStorage.getItem('mastering_redux_app_state');
-  return serialized ? JSON.parse(serialized) : undefined;
-};
-
-const rehydratedState = getRehydratedState();
+const rehydratedState = localStorageEnhancer.getLocalStorageState();
 
 const combine = (reducers) => {
   const reducerNames = Object.keys(reducers);
@@ -34,15 +30,7 @@ const combine = (reducers) => {
 
 const reducer = combine(reducerRegistry.getReducers());
 
-const loggerMiddleware = store => next => action => {
-  console.info('prev state', store.getState());
-  console.info('action', action);
-  const result = next(action);
-  console.info('next state', store.getState());
-  return result;
-};
-
-const enhancer = composeEnhancers(locationEnhancer, applyMiddleware(locationMiddleware, thunk, loggerMiddleware));
+const enhancer = composeEnhancers(localStorageEnhancer, locationEnhancer, applyMiddleware(locationMiddleware, thunk, loggerMiddleware));
 
 // const middlewareEnhancer = applyMiddleware(locationMiddleware, thunk, loggerMiddleware);
 // const enhancer = cs => locationEnhancer(middlewareEnhancer(cs));
