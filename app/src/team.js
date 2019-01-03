@@ -24,6 +24,7 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case SET_TEAM_DATA: {
       return produce(state, draft => {
+        draft.data = {};
         action.payload.forEach(item => {
           draft.data[item.id] = item;
         })
@@ -40,10 +41,10 @@ export default function reducer(state = initialState, action) {
       });
     }
     case ADD_TEAM: {
-      const { leagueId } = action.payload;
+      const team  = action.payload;
       return produce(state, draft => {
-        const teamId = Object.keys(draft.data).length + 1;
-        draft.data[teamId] = { ...defaultTeam, leagueId, id: teamId };
+        draft.data[team.id] = team;
+        draft.active = null;
       });
     }
     case ADD_MEMBER: {
@@ -71,32 +72,35 @@ export const setActiveTeam = createAction(SET_ACTIVE_TEAM, team => team.id);
 
 export const addTeam = createAction(ADD_TEAM);
 
-export const updateTeamName = createAction(
-  UPDATE_TEAM_NAME,
-  (name, teamId) => ({ name, teamId })
-);
+export const updateTeamName = createAction(UPDATE_TEAM_NAME);
 
 // thunk
 
 export const getTeamData = () => async dispatch => {
-  const teams = await API('teams');
-  if (teams) dispatch(setTeamData(teams));
+  try {
+    const teams = await API('teams');
+    dispatch(setTeamData(teams));
+  } catch (e) {
+    console.error(e);
+  }
 };
 
-export const postTeamData = ({ leagueId }) => async (dispatch, getState) => {
-  const { data } = getState().team;
-  const teamId = Object.keys(data).length + 1;
-  const team = { ...defaultTeam, leagueId, id: teamId };
-  await API.post('teams', team);
-
-  dispatch(addTeam({ leagueId }));
-
+export const postTeamData = ({ leagueId }) => async dispatch => {
+  const team = { ...defaultTeam, leagueId };
+  try {
+    const newTeam = await API.post('teams', team);
+    dispatch(addTeam({ ...team, id: newTeam.id }));
+  } catch (e) {
+    console.error(e);
+  }
 };
 
-export const putTeamName = (name, teamId) => async (dispatch, getState) => {
-  const { data } = getState().team;
-  const newTeam = { ...data[teamId], name };
-  await API.put(`teams/${teamId}`, newTeam);
-
-  dispatch(updateTeamName(name, teamId));
+export const patchTeamName = (name, teamId) => async dispatch => {
+  const newTeam = { name };
+  try {
+    await API.patch(`teams/${teamId}`, newTeam);
+    dispatch(updateTeamName({ name, teamId }));
+  } catch (e) {
+    console.error(e);
+  }
 };

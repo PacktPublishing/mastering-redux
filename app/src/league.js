@@ -19,6 +19,7 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case SET_LEAGUE_DATA: {
       return produce(state, draft => {
+        draft.data = {};
         action.payload.forEach(item => {
           draft.data[item.id] = item;
         })
@@ -62,6 +63,10 @@ export const updateLeagueName = createAction(
 // thunk
 
 export const getLeagueData = () => async dispatch => {
-  const leagues = await API('leagues');
-  if (leagues) dispatch(setLeagueData(leagues));
+  try {
+    const leagues = await API('leagues');
+    dispatch(setLeagueData(leagues));
+  } catch (e) {
+    console.error(e);
+  }
 };

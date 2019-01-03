@@ -11,13 +11,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  getLeagueData,
   getTeamData,
+  getLeagueData,
   getMemberData
 };
 
 class PanelsContainer extends React.PureComponent {
-
   getInitialData = {
     league: this.props.getLeagueData,
     team: this.props.getTeamData,

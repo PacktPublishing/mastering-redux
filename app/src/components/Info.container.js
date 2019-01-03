@@ -1,20 +1,50 @@
+import React from 'react';
 import { connect } from 'react-redux';
 import Info from 'components/Info';
-import { putMemberDetails } from 'member';
+import { getInfoDetails, getLocationPayload } from 'selectors';
+import { patchDetailsEntry, getDetailsData } from 'details';
+import { getMemberData } from 'member';
 
 const mapStateToProps = state => {
-  const { payload: { level, id } } = state.location;
-  const entity = state[level] || {};
-  const details = entity.details ? entity.details[id] : null;
+  const { id, level } = getLocationPayload(state);
+  const shouldFetchMembers = state.member.data && Object.keys(state.member.data).length === 0;
   return {
     id,
-    details,
-    name: level
+    name: level,
+    shouldFetchMembers,
+    details: getInfoDetails(state)
   }
 };
 
 const mapDispatchToProps = {
-  edit: putMemberDetails
+  getMemberData,
+  getDetailsData,
+  edit: patchDetailsEntry
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Info);
+class InfoContainer extends React.PureComponent {
+  componentDidMount() {
+    const { name, details, shouldFetchMembers } = this.props;
+    if (name === 'member' && shouldFetchMembers) this.props.getMemberData();
+    if (!details) {
+      this.props.getDetailsData();
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { details } = this.props;
+    if (details !== prevProps.details && !details) {
+      this.props.getDetailsData();
+    }
+  }
+
+  render() {
+    return (
+      <Info
+        {...this.props}
+      />
+    );
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(InfoContainer);

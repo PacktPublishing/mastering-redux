@@ -3,6 +3,11 @@ import styled from 'styled-components';
 import * as Ui from 'components/UI';
 
 class Details extends React.PureComponent {
+  static filterDetails([key = '']) {
+    if (key !== 'id') return !key.startsWith('_');
+    return false;
+  }
+
   onChange = e => {
     const { edit, id } = this.props;
     edit({ name: e.target.name, content: e.target.value, id });
@@ -16,18 +21,20 @@ class Details extends React.PureComponent {
           <Ui.PanelTitle small>Details</Ui.PanelTitle>
         </DetailsHeader>
         <DetailsList>
-          {Object.entries(details).map(([key, value]) => (
-            <DetailsListItem key={key}>
-              <DetailsKey>{key}:</DetailsKey>
-              <Ui.PanelInput
-                flat
-                name={key}
-                value={value}
-                onChange={this.onChange}
-                placeholder="click to edit"
-              />
-            </DetailsListItem>
-          ))}
+          {Object.entries(details)
+            .filter(Details.filterDetails)
+            .map(([key, value]) => (
+              <DetailsListItem key={key}>
+                <DetailsKey>{key}:</DetailsKey>
+                <Ui.PanelInput
+                  flat
+                  name={key}
+                  value={value}
+                  onChange={this.onChange}
+                  placeholder="click to edit"
+                />
+              </DetailsListItem>
+            ))}
         </DetailsList>
       </DetailsContainer>
     );
