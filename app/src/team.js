@@ -41,9 +41,9 @@ export default function reducer(state = initialState, action) {
       });
     }
     case ADD_TEAM: {
-      const team  = action.payload;
+      const team = action.payload;
       return produce(state, draft => {
-        draft.data[team.id] = team;
+        draft.data[team.id] = { ...defaultTeam, ...team };
         draft.active = null;
       });
     }

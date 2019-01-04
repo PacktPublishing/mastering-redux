@@ -2,35 +2,41 @@ import reducer, {
   initialState,
   ADD_MEMBER,
   UPDATE_MEMBER_NAME,
-  EDIT_DETAILS_ENTRY
+  EDIT_DETAILS_ENTRY, SET_MEMBER_DATA
 } from 'member';
+import { ADD_DETAILS_ENTRY } from 'details';
 
 const defaultState = {
   ...initialState,
   data: {
     1: { id: 1, name: 'Member 1', teamId: 1 }
-  },
-  details: {
-    1: { bio: '', age: '' }
   }
 };
 
 describe('Member reducer', () => {
+  it(`Test ${SET_MEMBER_DATA} action`, () => {
+    const array = [
+      { id: 1, name: 'Member 1', teamId: 1 },
+      { id: 2, name: 'Member 2', teamId: 2 }
+    ];
+    const action = { type: SET_MEMBER_DATA, payload: array };
+    const newState = reducer(defaultState, action);
+    expect(newState.data).toEqual({
+      1: array[0],
+      2: array[1]
+    });
+  });
 
   it(`Test ${ADD_MEMBER} action`, () => {
     const memberId = Object.keys(defaultState.data).length + 1;
-    const newMember = { teamId: 1 };
+    const newMember = { id: memberId, teamId: 1 };
     const action = { type: ADD_MEMBER, payload: newMember };
     const newState = reducer(defaultState, action);
     expect(newState).toEqual({
       ...defaultState,
       data: {
         ...defaultState.data,
-        [memberId]: { id: memberId, name: 'New Member', ...newMember }
-      },
-      details: {
-        ...defaultState.details,
-        2: { bio: '', age: '' }
+        [memberId]: { name: 'New Member', ...newMember }
       }
     });
   });
@@ -43,10 +49,13 @@ describe('Member reducer', () => {
     expect(updated.name).toMatch(name);
   });
 
-  it(`Test ${EDIT_DETAILS_ENTRY} action`, () => {
-    const action = { type: EDIT_DETAILS_ENTRY, payload: { name: 'bio', content: 'lorem ipsum', id: 1 } };
+  it(`Test ${ADD_DETAILS_ENTRY} action`, () => {
+    const details = { id: 10, bio: 'Lorem ipsum', age: '21', _memberId: 1 };
+    const action = { type: ADD_DETAILS_ENTRY, payload: details };
     const newState = reducer(defaultState, action);
-    const updated = newState.details[1];
-    expect(updated.bio).toMatch('lorem ipsum');
+    expect(newState.data[1]).toEqual({
+      ...defaultState.data[1],
+      detailsId: details.id
+    });
   });
 });

@@ -27,10 +27,9 @@ export default function reducer(state = initialState, action) {
       });
     }
     case ADD_MEMBER: {
-      const { teamId } = action.payload;
+      const member = action.payload;
       return produce(state, draft => {
-        const memberId = Object.keys(draft.data).length + 1;
-        draft.data[memberId] = { ...defaultMember, teamId, id: memberId };
+        draft.data[member.id] = { ...defaultMember, ...member };
       });
     }
     case UPDATE_MEMBER_NAME: {

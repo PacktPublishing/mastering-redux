@@ -18,6 +18,7 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case SET_DETAILS_DATA: {
       return produce(state, draft => {
+        draft.data = {};
         action.payload.forEach(item => {
           draft.data[item.id] = item;
         })

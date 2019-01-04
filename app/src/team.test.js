@@ -1,5 +1,6 @@
 import reducer, {
   initialState,
+  SET_TEAM_DATA,
   SET_ACTIVE_TEAM,
   ADD_TEAM,
   UPDATE_TEAM_NAME
@@ -17,6 +18,19 @@ const defaultState = {
 describe('Team reducer', () => {
   const state = { ...defaultState, active: 2 };
 
+  it(`Test ${SET_TEAM_DATA} action`, () => {
+    const array = [
+      { id: 1, name: 'Team 1', leagueId: 1 },
+      { id: 2, name: 'Team 2', leagueId: 2 }
+    ];
+    const action = { type: SET_TEAM_DATA, payload: array };
+    const newState = reducer(state, action);
+    expect(newState.data).toEqual({
+      1: array[0],
+      2: array[1]
+    });
+  });
+
   it(`Test ${SET_ACTIVE_TEAM} action`, () => {
     const action = { type: SET_ACTIVE_TEAM, payload: 1 };
     const newState = reducer(state, action);
@@ -31,12 +45,13 @@ describe('Team reducer', () => {
 
   it(`Test ${ADD_TEAM} action`, () => {
     const teamId = Object.keys(defaultState.data).length + 1;
-    const newTeam = { leagueId: 5 };
+    const newTeam = { id: teamId, leagueId: 5 };
     const action = { type: ADD_TEAM, payload: newTeam };
     const newState = reducer(state, action);
     expect(newState).toEqual({
       ...state,
-      data: { ...state.data, [teamId]: { id: teamId, name: 'New Team', ...newTeam } }
+      active: null,
+      data: { ...state.data, [teamId]: { name: 'New Team', ...newTeam } }
     });
   });
 

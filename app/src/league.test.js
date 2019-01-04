@@ -1,5 +1,6 @@
 import reducer, {
   initialState,
+  SET_LEAGUE_DATA,
   SET_ACTIVE_LEAGUE,
   UPDATE_LEAGUE_NAME,
 } from 'league';
@@ -16,6 +17,19 @@ const defaultState = {
 describe('League reducer', () => {
   const league = 4;
   const state = { ...defaultState, active: league };
+
+  it(`Test ${SET_LEAGUE_DATA} action`, () => {
+    const array = [
+      { id: 1, name: 'League 1' },
+      { id: 2, name: 'League 2' }
+    ];
+    const action = { type: SET_LEAGUE_DATA, payload: array };
+    const newState = reducer(state, action);
+    expect(newState.data).toEqual({
+      1: array[0],
+      2: array[1]
+    });
+  });
 
   it(`Test ${SET_ACTIVE_LEAGUE} action`, () => {
     const action = { type: SET_ACTIVE_LEAGUE, payload: 3 };
