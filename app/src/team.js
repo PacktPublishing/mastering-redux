@@ -7,7 +7,6 @@ import API from 'api.service';
 
 const reducerName = 'team';
 
-
 export const SET_TEAM_DATA = `mastering-redux/${reducerName}/SET_TEAM_DATA`;
 export const SET_ACTIVE_TEAM = `mastering-redux/${reducerName}/SET_ACTIVE_TEAM`;
 export const ADD_TEAM = `mastering-redux/${reducerName}/ADD_TEAM`;
@@ -27,7 +26,7 @@ export default function reducer(state = initialState, action) {
         draft.data = {};
         action.payload.forEach(item => {
           draft.data[item.id] = item;
-        })
+        });
       });
     }
     case SET_ACTIVE_TEAM: {
@@ -94,6 +93,17 @@ export const postTeamData = ({ leagueId }) => async dispatch => {
     console.error(e);
   }
 };
+
+export function postTeamData2({ leagueId }) {
+  const team = { ...defaultTeam, leagueId };
+  return function postTeamDataThunk(dispatch) {
+    API.post('teams', team)
+      .then(newTeam =>
+        dispatch(addTeam({ ...team, id: newTeam.id }))
+      )
+      .catch(e => console.error(e));
+  };
+}
 
 export const patchTeamName = (name, teamId) => async dispatch => {
   const newTeam = { name };
