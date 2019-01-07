@@ -22,6 +22,11 @@
       "name": "Member 1",
       "teamId": 1,
       "detailsId": 1
+    },
+    {
+      "name": "New Member",
+      "teamId": 1,
+      "id": 2
     }
   ],
   "details": [
@@ -30,6 +35,12 @@
       "bio": "Lorem ipsum",
       "age": "21",
       "_memberId": 1
+    },
+    {
+      "bio": "",
+      "age": "",
+      "_memberId": 2,
+      "id": 2
     }
   ]
 }

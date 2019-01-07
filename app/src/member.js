@@ -3,7 +3,6 @@ import { delay } from 'lodash-es';
 import { createAction } from 'redux-actions';
 import reducerRegistry from 'reducerRegistry';
 import API from 'api.service';
-import { ADD_DETAILS_ENTRY, postDetailsEntry } from 'details';
 
 
 const reducerName = 'member';
@@ -32,25 +31,22 @@ export default function reducer(state = initialState, action) {
         draft.data = {};
         action.payload.forEach(item => {
           draft.data[item.id] = item;
-        })
+          draft.loading = false;
+        });
       });
     }
     case ADD_MEMBER: {
-      const member = action.payload;
+      const { member } = action.payload;
       return produce(state, draft => {
         draft.data[member.id] = { ...defaultMember, ...member };
+        draft.loading = false;
       });
     }
     case UPDATE_MEMBER_NAME: {
       const { name, memberId } = action.payload;
       return produce(state, draft => {
         draft.data[memberId].name = name;
-      });
-    }
-    case ADD_DETAILS_ENTRY: {
-      const { id: detailsId, _memberId } = action.payload;
-      return produce(state, draft => {
-        draft.data[_memberId].detailsId = detailsId;
+        draft.loading = false;
       });
     }
     default:
@@ -75,25 +71,29 @@ export const getMemberData = () => async dispatch => {
   try {
     const members = await API('members');
     dispatch(setMemberData(members));
-    delay(() => dispatch(setMemberLoading(false)), 700);
   } catch (e) {
     console.error(e);
     delay(() => dispatch(setMemberLoading(false)), 700);
   }
 };
 
-export const postMemberData = ({ teamId }) => async dispatch => {
+export const createMemberAndDetails = ({ teamId }) => dispatch => {
   const member = { ...defaultMember, teamId };
   dispatch(setMemberLoading(true));
-  try {
-    const newMember = await API.post('members', member);
-    dispatch(addMember({ ...member, id: newMember.id }));
-    dispatch(postDetailsEntry({ ...defaultDetails, _memberId: newMember.id }));
-    delay(() => dispatch(setMemberLoading(false)), 700);
-  } catch (e) {
-    console.error(e);
-    delay(() => dispatch(setMemberLoading(false)), 700);
-  }
+  API.post('members', member)
+    .then(memberResponse => {
+      const entry = { ...defaultDetails, _memberId: memberResponse.id };
+      return API.post('details', entry)
+        .then(entryResponse => {
+          const newMember = { ...member, id: memberResponse.id };
+          const newEntry = { ...entry, id: entryResponse.id };
+          dispatch(addMember({ member: newMember, entry: newEntry }));
+        });
+    })
+    .catch(e => {
+      console.error(e);
+      delay(() => dispatch(setMemberLoading(false)), 700);
+    });
 };
 
 export const patchMemberName = (name, memberId) => async dispatch => {
@@ -102,7 +102,6 @@ export const patchMemberName = (name, memberId) => async dispatch => {
   try {
     await API.patch(`members/${memberId}`, newMember);
     dispatch(updateMemberName(name, memberId));
-    delay(() => dispatch(setMemberLoading(false)), 700);
   } catch (e) {
     console.error(e);
     delay(() => dispatch(setMemberLoading(false)), 700);

@@ -30,7 +30,7 @@ describe('Member reducer', () => {
   it(`Test ${ADD_MEMBER} action`, () => {
     const memberId = Object.keys(defaultState.data).length + 1;
     const newMember = { id: memberId, teamId: 1 };
-    const action = { type: ADD_MEMBER, payload: newMember };
+    const action = { type: ADD_MEMBER, payload: { member: newMember } };
     const newState = reducer(defaultState, action);
     expect(newState).toEqual({
       ...defaultState,
@@ -47,15 +47,5 @@ describe('Member reducer', () => {
     const newState = reducer(defaultState, action);
     const updated = newState.data[1];
     expect(updated.name).toMatch(name);
-  });
-
-  it(`Test ${ADD_DETAILS_ENTRY} action`, () => {
-    const details = { id: 10, bio: 'Lorem ipsum', age: '21', _memberId: 1 };
-    const action = { type: ADD_DETAILS_ENTRY, payload: details };
-    const newState = reducer(defaultState, action);
-    expect(newState.data[1]).toEqual({
-      ...defaultState.data[1],
-      detailsId: details.id
-    });
   });
 });

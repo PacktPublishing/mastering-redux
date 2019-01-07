@@ -1,9 +1,10 @@
 import reducer, {
   initialState,
   SET_DETAILS_DATA,
-  ADD_DETAILS_ENTRY,
   EDIT_DETAILS_ENTRY
 } from 'details';
+
+import { ADD_MEMBER } from 'member';
 
 const defaultState = {
   ...initialState,
@@ -24,13 +25,13 @@ describe('Details reducer', () => {
     });
   });
 
-  it(`Test ${ADD_DETAILS_ENTRY} action`, () => {
-    const details = detailsList[1];
-    const action = { type: ADD_DETAILS_ENTRY, payload: details };
+  it(`Test ${ADD_MEMBER} action`, () => {
+    const entry = detailsList[1];
+    const action = { type: ADD_MEMBER, payload: { entry } };
     const newState = reducer(defaultState, action);
     expect(newState.data).toEqual({
       ...defaultState.data,
-      2: details
+      2: entry
     });
   });
 

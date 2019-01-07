@@ -34,6 +34,7 @@ export default function reducer(state = initialState, action) {
         draft.data = {};
         action.payload.forEach(item => {
           draft.data[item.id] = item;
+          draft.loading = false;
         });
       });
     }
@@ -52,16 +53,19 @@ export default function reducer(state = initialState, action) {
       return produce(state, draft => {
         draft.data[team.id] = { ...defaultTeam, ...team };
         draft.active = null;
+        draft.loading = false;
       });
     }
     case ADD_MEMBER: {
+      const { member } = action.payload;
       return produce(state, draft => {
-        draft.active = action.payload.teamId;
+        draft.active = member.teamId;
       });
     }
     case UPDATE_TEAM_NAME: {
       const { name, teamId } = action.payload;
       return produce(state, draft => {
+        draft.loading = false;
         const item = draft.data[teamId];
         item.name = name;
       });
@@ -90,7 +94,6 @@ export const getTeamData = () => async dispatch => {
   try {
     const teams = await API('teams');
     dispatch(setTeamData(teams));
-    delay(() => dispatch(setTeamLoading(false)), 700);
   } catch (e) {
     console.error(e);
     delay(() => dispatch(setTeamLoading(false)), 700);
@@ -103,29 +106,11 @@ export const postTeamData = ({ leagueId }) => async dispatch => {
   try {
     const newTeam = await API.post('teams', team);
     dispatch(addTeam({ ...team, id: newTeam.id }));
-    delay(() => dispatch(setTeamLoading(false)), 700);
   } catch (e) {
     console.error(e);
     delay(() => dispatch(setTeamLoading(false)), 700);
   }
 };
-
-export function postTeamData2({ leagueId }) {
-  const team = { ...defaultTeam, leagueId };
-  return function postTeamDataThunk(dispatch) {
-    dispatch(setTeamLoading(false));
-    API.post('teams', team)
-      .then(newTeam => {
-        dispatch(addTeam({ ...team, id: newTeam.id }));
-        delay(() => dispatch(setTeamLoading(false)), 700);
-      }
-      )
-      .catch(e => {
-        console.error(e);
-        delay(() => dispatch(setTeamLoading(false)), 700);
-      });
-  };
-}
 
 export const patchTeamName = (name, teamId) => async dispatch => {
   const newTeam = { name };
@@ -133,7 +118,6 @@ export const patchTeamName = (name, teamId) => async dispatch => {
   try {
     await API.patch(`teams/${teamId}`, newTeam);
     dispatch(updateTeamName({ name, teamId }));
-    delay(() => dispatch(setTeamLoading(false)), 700);
   } catch (e) {
     console.error(e);
     delay(() => dispatch(setTeamLoading(false)), 700);

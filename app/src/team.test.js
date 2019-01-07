@@ -57,7 +57,7 @@ describe('Team reducer', () => {
 
   it(`Test ${ADD_MEMBER} action`, () => {
     const newMember = { teamId: 3 };
-    const action = { type: ADD_MEMBER, payload: newMember };
+    const action = { type: ADD_MEMBER, payload: { member: newMember } };
     const newState = reducer(state, action);
     expect(newState).toEqual({
       ...state,

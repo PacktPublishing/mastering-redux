@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ColumnItem from 'components/ColumnItem';
 import { postTeamData, setActiveTeam, patchTeamName } from 'team';
-import { postMemberData, patchMemberName } from 'member';
+import { createMemberAndDetails, patchMemberName } from 'member';
 import { setActiveLeague, updateLeagueName } from 'league';
 import { debounce } from 'lodash-es';
 
@@ -19,8 +19,8 @@ const mapDispatchToProps = {
   setActiveLeague,
   updateLeagueName,
   addTeam: postTeamData,
-  addMember: postMemberData,
   updateTeamName: patchTeamName,
+  addMember: createMemberAndDetails,
   updateMemberName: patchMemberName,
 };
 

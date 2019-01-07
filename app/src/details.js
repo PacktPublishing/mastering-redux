@@ -2,11 +2,11 @@ import produce from 'immer';
 import { createAction } from 'redux-actions';
 import reducerRegistry from 'reducerRegistry';
 import API from 'api.service';
+import { ADD_MEMBER } from 'member';
 
 const reducerName = 'details';
 
 export const SET_DETAILS_DATA = `mastering-redux/${reducerName}/SET_DETAILS_DATA`;
-export const ADD_DETAILS_ENTRY = `mastering-redux/${reducerName}/ADD_DETAILS_ENTRY`;
 export const EDIT_DETAILS_ENTRY = `mastering-redux/${reducerName}/EDIT_DETAILS_ENTRY`;
 
 
@@ -24,8 +24,8 @@ export default function reducer(state = initialState, action) {
         })
       });
     }
-    case ADD_DETAILS_ENTRY: {
-      const entry = action.payload;
+    case ADD_MEMBER: {
+      const { entry } = action.payload;
       return produce(state, draft => {
         draft.data[entry.id] = entry;
       });
@@ -45,7 +45,6 @@ export default function reducer(state = initialState, action) {
 reducerRegistry.register(reducerName, reducer);
 
 export const setDetailsData = createAction(SET_DETAILS_DATA);
-export const addDetailsEntry = createAction(ADD_DETAILS_ENTRY);
 export const editDetailsEntry = createAction(EDIT_DETAILS_ENTRY);
 
 // thunk
@@ -54,15 +53,6 @@ export const getDetailsData = () => async dispatch => {
   try {
     const details = await API('details');
     dispatch(setDetailsData(details));
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-export const postDetailsEntry = (entry) => async dispatch => {
-  try {
-    const newEntry = await API.post('details', entry);
-    dispatch(addDetailsEntry({ ...entry, id: newEntry.id }));
   } catch (e) {
     console.error(e);
   }

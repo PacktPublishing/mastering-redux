@@ -60,14 +60,11 @@ export const getPanelColumns = createSelector(
 
 export const getInfoDetails = createSelector([
   getLocationPayload,
-  getAllLeagues,
-  getAllTeams,
-  getAllMembers,
   getAllDetails
-], (payload, league, team, member, details) => {
+], (payload, details) => {
   if (!details) return null;
   const { level, id } = payload;
-  const entity = { league, team, member }[level];
-  const detailsId = entity && entity[id] && entity[id].detailsId;
-  return detailsId ? (details[detailsId] || null) : {};
+  const detailsList = details ? Object.values(details) : [];
+  const entry = detailsList.find(e => e[`_${level}Id`] === parseInt(id, 10));
+  return entry || null;
 });
