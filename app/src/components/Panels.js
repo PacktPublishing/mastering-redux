@@ -11,9 +11,8 @@ function Panels(props) {
     <Row>
       {columns.map(col => (
         <Column
+          {...col}
           key={col.type}
-          type={col.type}
-          items={col.items}
           name={`${col.type}s`}
           getInitialData={getInitialData[col.type]}
         />

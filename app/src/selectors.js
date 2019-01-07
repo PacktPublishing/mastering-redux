@@ -2,11 +2,14 @@ import { createSelector } from 'reselect';
 
 const getActiveLeague = state => state.league.active;
 const getAllLeagues = state => state.league && state.league.data;
+const getLeaguesLoading = state => state.league && state.league.loading;
 
 const getActiveTeam = state => state.team.active;
 const getAllTeams = state => state.team && state.team.data;
+const getTeamsLoading = state => state.team && state.team.loading;
 
 const getAllMembers = state => state.member && state.member.data;
+const getMembesrLoading = state => state.member && state.member.loading;
 
 export const getLocationPayload = state => state.location.payload;
 
@@ -34,19 +37,22 @@ export const getActiveMembersIds = createSelector(
 );
 
 export const getPanelColumns = createSelector(
-  [getLeaguesIds, getActiveTeamsIds, getActiveMembersIds],
-  (leagues, teams, members) => [
+  [getLeaguesIds, getActiveTeamsIds, getActiveMembersIds, getLeaguesLoading, getTeamsLoading, getMembesrLoading],
+  (leagues, teams, members, leaguesLoading, teamsLoading, membersLoading) => [
     {
       items: leagues,
-      type: 'league'
+      type: 'league',
+      loading: leaguesLoading
     },
     {
       items: teams,
-      type: 'team'
+      type: 'team',
+      loading: teamsLoading
     },
     {
       items: members,
-      type: 'member'
+      type: 'member',
+      loading: membersLoading
     }
   ]
 );

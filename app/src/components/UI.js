@@ -24,6 +24,12 @@ export const Panel = styled.div`
   border-radius: 4px;
 `;
 
+export const PanelHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
 export const PanelTitle = styled.p`
   font-size: ${p => p.small ? SIZES.small : SIZES.medium};
   color: ${COLORS.text};
@@ -107,5 +113,36 @@ export const Link = styled(RFRLink)`
   
   &:last-child {
     margin: 0;
+  }
+`;
+
+export const Spinner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  width: 8px;
+  height: 8px;
+  border-top: 8px solid ${COLORS.accent};
+  border-right: 8px solid ${COLORS.accent};
+  border-bottom: 8px solid ${COLORS.accent};
+  border-left: 8px solid ${COLORS.text};
+  transform: translateZ(0);
+  animation: load 1.1s infinite linear;
+  
+  &::after {
+    content: '';
+    border-radius: 100%;
+    width: 8px;
+    height: 8px;
+  }
+  
+  @keyframes load {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {      
+      transform: rotate(360deg);
+    }
   }
 `;

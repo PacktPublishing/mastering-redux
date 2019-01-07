@@ -10,10 +10,13 @@ class Column extends Component {
   }
 
   render() {
-    const { items, name, type } = this.props;
+    const { items, name, type, loading } = this.props;
     return (
       <Col xs={4}>
-        <Ui.PanelTitle>{name}</Ui.PanelTitle>
+        <Ui.PanelHeader>
+          <Ui.PanelTitle>{name}</Ui.PanelTitle>
+          {loading && <Ui.Spinner />}
+        </Ui.PanelHeader>
         <Ui.Panel>
           <List
             itemData={{ type, items }}
