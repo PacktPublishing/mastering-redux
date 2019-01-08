@@ -2633,6 +2633,11 @@ delegates@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delegates/-/delegates-1.0.0.tgz#84c6e159b81904fdca59a0ef44cd870d31250f9a"
 
+deline@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/deline/-/deline-1.0.4.tgz#6c05c87836926e1a1c63e47882f3d2eb2c6f14c9"
+  integrity sha1-bAXIeDaSbhocY+R4gvPS6yxvFMk=
+
 depd@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.2.tgz#9bcd52e14c097763e749b274c4346ed2e560b5a9"
@@ -7412,9 +7417,14 @@ redux-first-router@^2.1.1:
     rudy-history "^1.0.0"
     rudy-match-path "^0.3.0"
 
-redux-thunk@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.3.0.tgz#51c2c19a185ed5187aaa9a2d08b666d0d6467622"
+redux-pack@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/redux-pack/-/redux-pack-0.1.5.tgz#1973b26ef749dfc020e8a61d54cf3e55ec8ae4cd"
+  integrity sha1-GXOybvdJ38Ag6KYdVM8+VeyK5M0=
+  dependencies:
+    deline "^1.0.4"
+    invariant "^2.2.2"
+    uuid "^3.0.1"
 
 redux@^4.0.1:
   version "4.0.1"

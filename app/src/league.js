@@ -1,16 +1,15 @@
 import produce from 'immer';
 import { createAction } from 'redux-actions';
+import { handle } from 'redux-pack';
 import { ADD_TEAM } from 'team';
 import reducerRegistry from 'reducerRegistry';
 import API from 'api.service';
-import { delay } from 'lodash-es';
 
 const reducerName = 'league';
 
-export const SET_LEAGUE_DATA = `mastering-redux/${reducerName}/SET_LEAGUE_DATA`;
+export const GET_LEAGUE_DATA = `mastering-redux/${reducerName}/GET_LEAGUE_DATA`;
 export const SET_ACTIVE_LEAGUE = `mastering-redux/${reducerName}/SET_ACTIVE_LEAGUE`;
 export const UPDATE_LEAGUE_NAME = `mastering-redux/${reducerName}/UPDATE_LEAGUE_NAME`;
-export const SET_LEAGUE_LOADING = `mastering-redux/${reducerName}/SET_LEAGUE_LOADING`;
 
 export const initialState = {
   data: {},
@@ -20,17 +19,14 @@ export const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case SET_LEAGUE_LOADING: {
-      debugger;
-      return produce(state, draft => {
-        draft.loading = action.payload;
-      });
-    }
-    case SET_LEAGUE_DATA: {
-      return produce(state, draft => {
-        draft.data = {};
-        action.payload.forEach(item => {
-          draft.data[item.id] = item;
+    case GET_LEAGUE_DATA: {
+      return handle(state, action, {
+        start: s => produce(s, draft => { draft.loading = true; }),
+        finish: s => produce(s, draft => { draft.loading = false; }),
+        success: s => produce(s, draft => {
+          action.payload.forEach(item => {
+            draft.data[item.id] = item;
+          });
         })
       });
     }
@@ -42,13 +38,16 @@ export default function reducer(state = initialState, action) {
     case UPDATE_LEAGUE_NAME: {
       const { name, leagueId } = action.payload;
       return produce(state, draft => {
-       const league = draft.data[leagueId];
+        const league = draft.data[leagueId];
         league.name = name;
       });
     }
     case ADD_TEAM: {
-      return produce(state, draft => {
-        draft.active = action.payload.leagueId;
+      return handle(state, action, {
+        success: s => produce(s, draft => {
+          const team = action.payload;
+          draft.active = team.leagueId;
+        })
       });
     }
     default:
@@ -57,9 +56,6 @@ export default function reducer(state = initialState, action) {
 }
 
 reducerRegistry.register(reducerName, reducer);
-
-export const setLeagueData = createAction(SET_LEAGUE_DATA);
-export const setLeagueLoading = createAction(SET_LEAGUE_LOADING);
 
 export const setActiveLeague = createAction(
   SET_ACTIVE_LEAGUE,
@@ -70,16 +66,9 @@ export const updateLeagueName = createAction(
   (name, leagueId) => ({ name, leagueId })
 );
 
-// thunk
+// packs
 
-export const getLeagueData = () => async dispatch => {
-  dispatch(setLeagueLoading(true));
-  try {
-    const leagues = await API('leagues');
-    dispatch(setLeagueData(leagues));
-    delay(() => dispatch(setLeagueLoading(false)), 700);
-  } catch (e) {
-    console.error(e);
-    delay(() => dispatch(setLeagueLoading(false)), 700);
-  }
-};
+export const getLeagueData = () => ({
+  type: GET_LEAGUE_DATA,
+  promise: API('leagues')
+});

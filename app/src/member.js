@@ -1,15 +1,13 @@
 import produce from 'immer';
-import { delay } from 'lodash-es';
-import { createAction } from 'redux-actions';
+import { handle } from 'redux-pack';
 import reducerRegistry from 'reducerRegistry';
 import API from 'api.service';
 
 
 const reducerName = 'member';
 
-export const SET_MEMBER_DATA = `mastering-redux/${reducerName}/SET_MEMBER_DATA`;
-export const SET_MEMBER_LOADING = `mastering-redux/${reducerName}/SET_MEMBER_LOADING`;
-export const ADD_MEMBER = `mastering-redux/${reducerName}/ADD_MEMBER`;
+export const GET_MEMBER_DATA = `mastering-redux/${reducerName}/GET_MEMBER_DATA`;
+export const CREATE_MEMBER_AND_DETAILS = `mastering-redux/${reducerName}/CREATE_MEMBER_AND_DETAILS`;
 export const UPDATE_MEMBER_NAME = `mastering-redux/${reducerName}/UPDATE_MEMBER_NAME`;
 
 const defaultMember = { name: 'New Member' };
@@ -21,33 +19,36 @@ export const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case SET_MEMBER_LOADING: {
-      return produce(state, draft => {
-        draft.loading = action.payload;
+    case GET_MEMBER_DATA: {
+      return handle(state, action, {
+        start: s => produce(s, draft => { draft.loading = true; }),
+        finish: s => produce(s, draft => { draft.loading = false; }),
+        success: s => produce(s, draft => {
+          draft.data = {};
+          action.payload.forEach(item => { draft.data[item.id] = item; });
+        })
       });
     }
-    case SET_MEMBER_DATA: {
-      return produce(state, draft => {
-        draft.data = {};
-        action.payload.forEach(item => {
-          draft.data[item.id] = item;
-          draft.loading = false;
-        });
-      });
-    }
-    case ADD_MEMBER: {
-      const { member } = action.payload;
-      return produce(state, draft => {
-        draft.data[member.id] = { ...defaultMember, ...member };
-        draft.loading = false;
+    case CREATE_MEMBER_AND_DETAILS: {
+      return handle(state, action, {
+        start: s => produce(s, draft => { draft.loading = true; }),
+        finish: s => produce(s, draft => { draft.loading = false; }),
+        success: s => produce(s, draft => {
+          const { member } = action.payload;
+          draft.data[member.id] = { ...defaultMember, ...member };
+        })
       });
     }
     case UPDATE_MEMBER_NAME: {
-      const { name, memberId } = action.payload;
-      return produce(state, draft => {
-        draft.data[memberId].name = name;
-        draft.loading = false;
+      return handle(state, action, {
+        start: s => produce(s, draft => { draft.loading = true; }),
+        finish: s => produce(s, draft => { draft.loading = false; }),
+        success: s => produce(s, draft => {
+          const { name, id } = action.payload;
+          draft.data[id].name = name;
+        })
       });
+
     }
     default:
       return state;
@@ -56,54 +57,33 @@ export default function reducer(state = initialState, action) {
 
 reducerRegistry.register(reducerName, reducer);
 
-export const setMemberData = createAction(SET_MEMBER_DATA);
-export const setMemberLoading = createAction(SET_MEMBER_LOADING);
-export const addMember = createAction(ADD_MEMBER);
-export const updateMemberName = createAction(
-  UPDATE_MEMBER_NAME,
-  (name, memberId) => ({ name, memberId })
-);
+// packs
 
-// thunk
+export const getMemberData = () => ({
+  type: GET_MEMBER_DATA,
+  promise: API('members')
+});
 
-export const getMemberData = () => async dispatch => {
-  dispatch(setMemberLoading(true));
-  try {
-    const members = await API('members');
-    dispatch(setMemberData(members));
-  } catch (e) {
-    console.error(e);
-    delay(() => dispatch(setMemberLoading(false)), 700);
-  }
-};
-
-export const createMemberAndDetails = ({ teamId }) => dispatch => {
+export const createMemberAndDetails = ({ teamId }) => {
   const member = { ...defaultMember, teamId };
-  dispatch(setMemberLoading(true));
-  API.post('members', member)
+  const promise = API.post('members', member)
     .then(memberResponse => {
       const entry = { ...defaultDetails, _memberId: memberResponse.id };
       return API.post('details', entry)
         .then(entryResponse => {
           const newMember = { ...member, id: memberResponse.id };
           const newEntry = { ...entry, id: entryResponse.id };
-          dispatch(addMember({ member: newMember, entry: newEntry }));
+          return { member: newMember, entry: newEntry };
         });
-    })
-    .catch(e => {
-      console.error(e);
-      delay(() => dispatch(setMemberLoading(false)), 700);
     });
+
+  return {
+    type: CREATE_MEMBER_AND_DETAILS,
+    promise
+  };
 };
 
-export const patchMemberName = (name, memberId) => async dispatch => {
-  const newMember = { name };
-  dispatch(setMemberLoading(true));
-  try {
-    await API.patch(`members/${memberId}`, newMember);
-    dispatch(updateMemberName(name, memberId));
-  } catch (e) {
-    console.error(e);
-    delay(() => dispatch(setMemberLoading(false)), 700);
-  }
-};
+export const updateMemberName = (name, memberId) => ({
+  type: UPDATE_MEMBER_NAME,
+  promise: API.patch(`members/${memberId}`, { name })
+});

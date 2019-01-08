@@ -1,15 +1,14 @@
 import produce from 'immer';
 import { createAction } from 'redux-actions';
+import { handle } from 'redux-pack';
 import { SET_ACTIVE_LEAGUE } from 'league';
-import { ADD_MEMBER } from 'member';
+import { CREATE_MEMBER_AND_DETAILS } from 'member';
 import reducerRegistry from 'reducerRegistry';
 import API from 'api.service';
-import { delay } from 'lodash-es';
 
 const reducerName = 'team';
 
-export const SET_TEAM_DATA = `mastering-redux/${reducerName}/SET_TEAM_DATA`;
-export const SET_TEAM_LOADING = `mastering-redux/${reducerName}/SET_TEAM_LOADING`;
+export const GET_TEAM_DATA = `mastering-redux/${reducerName}/GET_TEAM_DATA`;
 export const SET_ACTIVE_TEAM = `mastering-redux/${reducerName}/SET_ACTIVE_TEAM`;
 export const ADD_TEAM = `mastering-redux/${reducerName}/ADD_TEAM`;
 export const UPDATE_TEAM_NAME = `mastering-redux/${reducerName}/UPDATE_TEAM_NAME`;
@@ -24,18 +23,14 @@ export const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case SET_TEAM_LOADING: {
-      return produce(state, draft => {
-        draft.loading = action.payload;
-      });
-    }
-    case SET_TEAM_DATA: {
-      return produce(state, draft => {
-        draft.data = {};
-        action.payload.forEach(item => {
-          draft.data[item.id] = item;
-          draft.loading = false;
-        });
+    case GET_TEAM_DATA: {
+      return handle(state, action, {
+        start: s => produce(s, draft => { draft.loading = true }),
+        finish: s => produce(s, draft => { draft.loading = false }),
+        success: s => produce(s, draft => {
+          draft.data = {};
+          action.payload.forEach(item => { draft.data[item.id] = item; });
+        })
       });
     }
     case SET_ACTIVE_TEAM: {
@@ -49,25 +44,32 @@ export default function reducer(state = initialState, action) {
       });
     }
     case ADD_TEAM: {
-      const team = action.payload;
-      return produce(state, draft => {
-        draft.data[team.id] = { ...defaultTeam, ...team };
-        draft.active = null;
-        draft.loading = false;
+      return handle(state, action, {
+        start: s => produce(s, draft => { draft.loading = true; }),
+        finish: s => produce(s, draft => { draft.loading = false; }),
+        success: s => produce(s, draft => {
+          const team = action.payload;
+          draft.data[team.id] = { ...defaultTeam, ...team };
+          draft.active = null;
+        })
       });
     }
-    case ADD_MEMBER: {
-      const { member } = action.payload;
-      return produce(state, draft => {
-        draft.active = member.teamId;
+    case CREATE_MEMBER_AND_DETAILS: {
+      return handle(state, action, {
+        success: s => produce(s, draft => {
+          const { member } = action.payload;
+          draft.active = member.teamId;
+        })
       });
     }
     case UPDATE_TEAM_NAME: {
-      const { name, teamId } = action.payload;
-      return produce(state, draft => {
-        draft.loading = false;
-        const item = draft.data[teamId];
-        item.name = name;
+      return handle(state, action, {
+        start: s => produce(s, draft => { draft.loading = true; }),
+        finish: s => produce(s, draft => { draft.loading = false; }),
+        success: s => produce(s, draft => {
+          const { name, id } = action.payload;
+          draft.data[id].name = name;
+        })
       });
     }
     default:
@@ -77,49 +79,24 @@ export default function reducer(state = initialState, action) {
 
 reducerRegistry.register(reducerName, reducer);
 
-export const setTeamData = createAction(SET_TEAM_DATA);
-
-export const setTeamLoading = createAction(SET_TEAM_LOADING);
-
 export const setActiveTeam = createAction(SET_ACTIVE_TEAM, team => team.id);
-
-export const addTeam = createAction(ADD_TEAM);
-
-export const updateTeamName = createAction(UPDATE_TEAM_NAME);
 
 // thunk
 
-export const getTeamData = () => async dispatch => {
-  dispatch(setTeamLoading(true));
-  try {
-    const teams = await API('teams');
-    dispatch(setTeamData(teams));
-  } catch (e) {
-    console.error(e);
-    delay(() => dispatch(setTeamLoading(false)), 700);
-  }
-};
+export const getTeamData = () => ({
+  type: GET_TEAM_DATA,
+  promise: API('teams')
+});
 
-export const postTeamData = ({ leagueId }) => async dispatch => {
-  dispatch(setTeamLoading(true));
+export const addTeam = ({ leagueId }) => {
   const team = { ...defaultTeam, leagueId };
-  try {
-    const newTeam = await API.post('teams', team);
-    dispatch(addTeam({ ...team, id: newTeam.id }));
-  } catch (e) {
-    console.error(e);
-    delay(() => dispatch(setTeamLoading(false)), 700);
-  }
+  return {
+    type: ADD_TEAM,
+    promise: API.post('teams', team)
+  };
 };
 
-export const patchTeamName = (name, teamId) => async dispatch => {
-  const newTeam = { name };
-  dispatch(setTeamLoading(true));
-  try {
-    await API.patch(`teams/${teamId}`, newTeam);
-    dispatch(updateTeamName({ name, teamId }));
-  } catch (e) {
-    console.error(e);
-    delay(() => dispatch(setTeamLoading(false)), 700);
-  }
-};
+export const updateTeamName = (name, teamId) => ({
+  type: UPDATE_TEAM_NAME,
+  promise: API.patch(`teams/${teamId}`, { name })
+});
