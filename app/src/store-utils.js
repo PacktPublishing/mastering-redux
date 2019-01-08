@@ -1,3 +1,4 @@
+import { KEY } from 'redux-pack';
 
 export const loggerMiddleware = store => next => action => {
   console.info('prev state', store.getState());
@@ -46,3 +47,14 @@ function createLocaleStorageEnhancer() {
 }
 
 export const localStorageEnhancer = createLocaleStorageEnhancer();
+
+export function makePackAction(lifecycle, { type, payload, meta={} }) {
+  return {
+    type,
+    payload,
+    meta: {
+      ...meta,
+      [KEY.LIFECYCLE]: lifecycle,
+    },
+  }
+}

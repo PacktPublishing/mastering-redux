@@ -1,12 +1,14 @@
+import { LIFECYCLE } from 'redux-pack';
+import { makePackAction } from 'store-utils';
 import reducer, {
   initialState,
-  SET_TEAM_DATA,
+  GET_TEAM_DATA,
   SET_ACTIVE_TEAM,
   ADD_TEAM,
   UPDATE_TEAM_NAME
 } from 'team';
 import { SET_ACTIVE_LEAGUE } from 'league';
-import { ADD_MEMBER } from 'member';
+import { CREATE_MEMBER_AND_DETAILS } from 'member';
 
 const defaultState = {
   ...initialState,
@@ -18,12 +20,15 @@ const defaultState = {
 describe('Team reducer', () => {
   const state = { ...defaultState, active: 2 };
 
-  it(`Test ${SET_TEAM_DATA} action`, () => {
+  it(`Test ${GET_TEAM_DATA} action`, () => {
     const array = [
       { id: 1, name: 'Team 1', leagueId: 1 },
       { id: 2, name: 'Team 2', leagueId: 2 }
     ];
-    const action = { type: SET_TEAM_DATA, payload: array };
+    const action = makePackAction(LIFECYCLE.SUCCESS, {
+      type: GET_TEAM_DATA,
+      payload: array
+    });
     const newState = reducer(state, action);
     expect(newState.data).toEqual({
       1: array[0],
@@ -46,7 +51,10 @@ describe('Team reducer', () => {
   it(`Test ${ADD_TEAM} action`, () => {
     const teamId = Object.keys(defaultState.data).length + 1;
     const newTeam = { id: teamId, leagueId: 5 };
-    const action = { type: ADD_TEAM, payload: newTeam };
+    const action = makePackAction(LIFECYCLE.SUCCESS, {
+      type: ADD_TEAM,
+      payload: newTeam
+    });
     const newState = reducer(state, action);
     expect(newState).toEqual({
       ...state,
@@ -55,9 +63,12 @@ describe('Team reducer', () => {
     });
   });
 
-  it(`Test ${ADD_MEMBER} action`, () => {
+  it(`Test ${CREATE_MEMBER_AND_DETAILS} action`, () => {
     const newMember = { teamId: 3 };
-    const action = { type: ADD_MEMBER, payload: { member: newMember } };
+    const action = makePackAction(LIFECYCLE.SUCCESS, {
+      type: CREATE_MEMBER_AND_DETAILS,
+      payload: { member: newMember }
+    });
     const newState = reducer(state, action);
     expect(newState).toEqual({
       ...state,
@@ -67,7 +78,10 @@ describe('Team reducer', () => {
 
   test(`Test ${UPDATE_TEAM_NAME} action`, () => {
     const name = `test_team`;
-    const action = { type: UPDATE_TEAM_NAME, payload: { teamId: 1, name } };
+    const action = makePackAction(LIFECYCLE.SUCCESS, {
+      type: UPDATE_TEAM_NAME,
+      payload: { id: 1, name }
+    });
     const newState = reducer(defaultState, action);
     const updated = newState.data[1];
     expect(updated.name).toMatch(name);

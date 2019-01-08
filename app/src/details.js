@@ -37,7 +37,7 @@ export default function reducer(state = initialState, action) {
       return handle(state, action, {
         success: s => produce(s, draft => {
           const entry = action.payload;
-          draft.data[entry.id] = entry;
+          Object.assign(draft.data[entry.id], entry);
         })
       });
     }

@@ -1,10 +1,12 @@
+import { LIFECYCLE } from 'redux-pack';
 import reducer, {
   initialState,
-  SET_LEAGUE_DATA,
+  GET_LEAGUE_DATA,
   SET_ACTIVE_LEAGUE,
   UPDATE_LEAGUE_NAME,
 } from 'league';
 import { ADD_TEAM } from 'team';
+import { makePackAction } from 'store-utils';
 
 const defaultState = {
   ...initialState,
@@ -18,12 +20,12 @@ describe('League reducer', () => {
   const league = 4;
   const state = { ...defaultState, active: league };
 
-  it(`Test ${SET_LEAGUE_DATA} action`, () => {
+  it(`Test ${GET_LEAGUE_DATA} action`, () => {
     const array = [
       { id: 1, name: 'League 1' },
       { id: 2, name: 'League 2' }
     ];
-    const action = { type: SET_LEAGUE_DATA, payload: array };
+    const action = makePackAction(LIFECYCLE.SUCCESS, { type: GET_LEAGUE_DATA, payload: array });
     const newState = reducer(state, action);
     expect(newState.data).toEqual({
       1: array[0],
@@ -47,7 +49,7 @@ describe('League reducer', () => {
 
   it(`Test ${ADD_TEAM} action`, () => {
     const newTeam = { id: 1, leagueId: 5 };
-    const action = { type: ADD_TEAM, payload: newTeam };
+    const action = makePackAction(LIFECYCLE.SUCCESS, { type: ADD_TEAM, payload: newTeam });
     const newState = reducer(state, action);
     expect(newState).toEqual({
       ...state,
