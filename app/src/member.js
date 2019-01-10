@@ -77,6 +77,23 @@ export const getMemberData = () => async dispatch => {
   }
 };
 
+// fake action
+const postDetailsEntry = () => {};
+
+export const postMemberData = ({ teamId }) => async dispatch => {
+  const member = { ...defaultMember, teamId };
+  dispatch(setMemberLoading(true));
+  try {
+    const newMember = await API.post('members', member);
+    dispatch(addMember({ ...member, id: newMember.id }));
+    dispatch(postDetailsEntry({ ...defaultDetails, _memberId: newMember.id }));
+    delay(() => dispatch(setMemberLoading(false)), 700);
+  } catch (e) {
+    console.error(e);
+    delay(() => dispatch(setMemberLoading(false)), 700);
+  }
+};
+
 export const createMemberAndDetails = ({ teamId }) => dispatch => {
   const member = { ...defaultMember, teamId };
   dispatch(setMemberLoading(true));
