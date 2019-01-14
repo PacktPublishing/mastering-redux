@@ -1,11 +1,16 @@
+import { select, call, put } from 'redux-saga/effects';
 import { LIFECYCLE } from 'redux-pack';
 import reducer, {
   initialState,
   CREATE_MEMBER_AND_DETAILS,
   UPDATE_MEMBER_NAME,
-  GET_MEMBER_DATA
+  GET_MEMBER_DATA,
+  setMemberWithDetailsEntry
 } from 'member/member';
 import { makePackAction } from 'store-utils';
+import { onNavigationToInfo } from 'member/member.saga';
+import { getInfoDetails, getInfoEntityDataItem } from 'selectors';
+import API from 'api.service';
 
 const defaultState = {
   ...initialState,
@@ -58,4 +63,40 @@ describe('Member reducer', () => {
     const updated = newState.data[1];
     expect(updated.name).toMatch(name);
   });
+});
+
+describe('onNavigationToInfo saga', () => {
+  const action = {
+    type: 'INFO_ROUTE',
+    payload: { level: 'member', id: 1 }
+  };
+  const entity = {
+    id: 1,
+    name: 'Member 1'
+  };
+  const details = {
+    bio: 'lorem ipsum',
+    age: 21
+  };
+  const generator = onNavigationToInfo(action);
+
+  it('Tests getInfoEntityDataItem selector', () => {
+    expect(generator.next().value).toEqual(select(getInfoEntityDataItem));
+  });
+
+  it('Tests API call to entity data', () => {
+    expect(generator.next(null).value).toEqual(call(API, `members/1`));
+  });
+
+  it('Tests getInfoDetails selector', () => {
+    expect(generator.next(entity).value).toEqual(select(getInfoDetails));
+  });
+
+  it('Tests API call to details data', () => {
+    expect(generator.next(null).value).toEqual(call(API, 'details'));
+  });
+
+  it('Tests dispatch of SET_MEMBER_WITH_DETAILS_ENTRY action', () => {
+    expect(generator.next(details).value).toEqual(put(setMemberWithDetailsEntry({ entity, details })));
+  })
 });

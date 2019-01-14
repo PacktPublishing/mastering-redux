@@ -18,15 +18,6 @@ const defaultState = {
 
 describe('Details reducer', () => {
   const detailsList = [{ id: 1, description: 'Lorem' }, { id: 2, bio: 'ipsum', _memberId: 1 }];
-  it(`Test ${GET_DETAILS_DATA} action`, () => {
-    const array = detailsList;
-    const action = makePackAction(LIFECYCLE.SUCCESS, { type: GET_DETAILS_DATA, payload: array });
-    const newState = reducer(defaultState, action);
-    expect(newState.data).toEqual({
-      1: array[0],
-      2: array[1]
-    });
-  });
 
   it(`Test ${CREATE_MEMBER_AND_DETAILS} action`, () => {
     const entry = detailsList[1];

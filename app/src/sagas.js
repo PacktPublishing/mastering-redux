@@ -1,7 +1,7 @@
 import { all, fork } from 'redux-saga/effects';
-import detailsSaga from 'details/details.saga';
+import memberSaga from 'member/member.saga';
 
-const sagas = [detailsSaga];
+const sagas = [memberSaga];
 
 export function* rootSaga() {
   yield all(sagas.map(saga => fork(saga)));

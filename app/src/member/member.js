@@ -7,10 +7,10 @@ import API from 'api.service';
 
 const reducerName = 'member';
 
-export const SET_MEMBER_DATA = `mastering-redux/${reducerName}/SET_MEMBER_DATA`;
 export const GET_MEMBER_DATA = `mastering-redux/${reducerName}/GET_MEMBER_DATA`;
 export const CREATE_MEMBER_AND_DETAILS = `mastering-redux/${reducerName}/CREATE_MEMBER_AND_DETAILS`;
 export const UPDATE_MEMBER_NAME = `mastering-redux/${reducerName}/UPDATE_MEMBER_NAME`;
+export const SET_MEMBER_WITH_DETAILS_ENTRY = `mastering-redux/${reducerName}/SET_MEMBER_WITH_DETAILS_ENTRY`;
 
 const defaultMember = { name: 'New Member' };
 const defaultDetails = { bio: '', age: '' };
@@ -21,11 +21,6 @@ export const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case SET_MEMBER_DATA: {
-      return produce(state, draft => {
-        draft.data = action.payload;
-      })
-    }
     case GET_MEMBER_DATA: {
       return handle(state, action, {
         start: s => produce(s, draft => { draft.loading = true; }),
@@ -57,6 +52,12 @@ export default function reducer(state = initialState, action) {
       });
 
     }
+    case SET_MEMBER_WITH_DETAILS_ENTRY: {
+      const { entity } = action.payload;
+      return produce(state, draft => {
+        draft.data[entity.id] = entity;
+      });
+    }
     default:
       return state;
   }
@@ -64,7 +65,7 @@ export default function reducer(state = initialState, action) {
 
 reducerRegistry.register(reducerName, reducer);
 
-export const setMemberData = createAction(SET_MEMBER_DATA);
+export const setMemberWithDetailsEntry = createAction(SET_MEMBER_WITH_DETAILS_ENTRY);
 
 // packs
 

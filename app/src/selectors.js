@@ -57,6 +57,16 @@ export const getPanelColumns = createSelector(
   ]
 );
 
+export const getInfoEntityDataItem = createSelector([
+  getAllLeagues,
+  getAllTeams,
+  getAllMembers,
+  getLocationPayload
+], (league, team, member, payload) => {
+  const { level, id } = payload;
+  const entities = { league, team, member };
+  return entities[level] && entities[level][id];
+});
 
 export const getInfoDetails = createSelector([
   getLocationPayload,
