@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom';
 import App from './components/App';
 import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
-import reducerRegistry from 'reducerRegistry';
-import { locationReducer, locationMiddleware, locationEnhancer } from 'router';
-import { loggerMiddleware, localStorageEnhancer } from 'store-utils';
 import { middleware as reduxPackMiddleware } from 'redux-pack';
+import createSagaMiddleware from 'redux-saga';
+import reducerRegistry from 'reducerRegistry';
+import { locationReducer, locationMiddleware, locationEnhancer, locationStart } from 'router';
+import { loggerMiddleware, localStorageEnhancer } from 'store-utils';
+import { rootSaga } from './sagas';
 
 const composeEnhancers =
   (process.env.NODE_ENV === 'development' &&
@@ -31,20 +33,24 @@ const combine = reducers => {
 
 const reducer = combine(reducerRegistry.getReducers());
 
+const sagaMiddleware = createSagaMiddleware();
+
 const enhancer = composeEnhancers(
   locationEnhancer,
   applyMiddleware(
     locationMiddleware,
+    sagaMiddleware,
     reduxPackMiddleware,
-    loggerMiddleware
-  ),
-  localStorageEnhancer
+    // loggerMiddleware
+  )
 );
 
 // const middlewareEnhancer = applyMiddleware(locationMiddleware, reduxPackMiddleware, loggerMiddleware);
 // const enhancer = cs => locationEnhancer(middlewareEnhancer(localStorageEnhancer(cs)));
 
 const store = createStore(reducer, rehydratedState, enhancer);
+sagaMiddleware.run(rootSaga);
+locationStart();
 
 reducerRegistry.setChangeListener(reducers => {
   store.replaceReducer(combine(reducers));

@@ -7,18 +7,19 @@ export const routesMap = {
   },
   PANEL_ROUTE: {
     path: '/app',
-    page: 'Panels.container'
+    page: 'Panels/Panels.container'
   },
   INFO_ROUTE: {
     path: '/app/:level/:id/info',
-    page: 'Info.container'
+    page: 'Info/Info.container'
   }
 };
 
 const {
   reducer: locationReducer,
   middleware: locationMiddleware,
-  enhancer: locationEnhancer
-} = connectRoutes(routesMap);
+  enhancer: locationEnhancer,
+  initialDispatch: locationStart
+} = connectRoutes(routesMap, { initialDispatch: false });
 
-export { locationReducer, locationMiddleware, locationEnhancer };
+export { locationReducer, locationMiddleware, locationEnhancer, locationStart };

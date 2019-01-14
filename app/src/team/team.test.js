@@ -6,9 +6,9 @@ import reducer, {
   SET_ACTIVE_TEAM,
   ADD_TEAM,
   UPDATE_TEAM_NAME
-} from 'team';
-import { SET_ACTIVE_LEAGUE } from 'league';
-import { CREATE_MEMBER_AND_DETAILS } from 'member';
+} from 'team/team';
+import { SET_ACTIVE_LEAGUE } from 'league/league';
+import { CREATE_MEMBER_AND_DETAILS } from 'member/member';
 
 const defaultState = {
   ...initialState,

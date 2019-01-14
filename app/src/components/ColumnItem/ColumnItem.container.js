@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import ColumnItem from 'components/ColumnItem';
-import { addTeam, setActiveTeam, updateTeamName } from 'team';
-import { createMemberAndDetails, updateMemberName } from 'member';
-import { setActiveLeague, updateLeagueName } from 'league';
+import ColumnItem from 'components/ColumnItem/ColumnItem';
+import { addTeam, setActiveTeam, updateTeamName } from 'team/team';
+import { createMemberAndDetails, updateMemberName } from 'member/member';
+import { setActiveLeague, updateLeagueName } from 'league/league';
 import { debounce } from 'lodash-es';
 
 function mapStateToProps(state, ownProps) {

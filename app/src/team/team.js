@@ -1,8 +1,8 @@
 import produce from 'immer';
 import { createAction } from 'redux-actions';
 import { handle } from 'redux-pack';
-import { SET_ACTIVE_LEAGUE } from 'league';
-import { CREATE_MEMBER_AND_DETAILS } from 'member';
+import { SET_ACTIVE_LEAGUE } from 'league/league';
+import { CREATE_MEMBER_AND_DETAILS } from 'member/member';
 import reducerRegistry from 'reducerRegistry';
 import API from 'api.service';
 

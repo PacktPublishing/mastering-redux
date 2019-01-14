@@ -1,4 +1,5 @@
 import produce from 'immer';
+import { createAction } from 'redux-actions';
 import { handle } from 'redux-pack';
 import reducerRegistry from 'reducerRegistry';
 import API from 'api.service';
@@ -6,6 +7,7 @@ import API from 'api.service';
 
 const reducerName = 'member';
 
+export const SET_MEMBER_DATA = `mastering-redux/${reducerName}/SET_MEMBER_DATA`;
 export const GET_MEMBER_DATA = `mastering-redux/${reducerName}/GET_MEMBER_DATA`;
 export const CREATE_MEMBER_AND_DETAILS = `mastering-redux/${reducerName}/CREATE_MEMBER_AND_DETAILS`;
 export const UPDATE_MEMBER_NAME = `mastering-redux/${reducerName}/UPDATE_MEMBER_NAME`;
@@ -19,6 +21,11 @@ export const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
+    case SET_MEMBER_DATA: {
+      return produce(state, draft => {
+        draft.data = action.payload;
+      })
+    }
     case GET_MEMBER_DATA: {
       return handle(state, action, {
         start: s => produce(s, draft => { draft.loading = true; }),
@@ -56,6 +63,8 @@ export default function reducer(state = initialState, action) {
 }
 
 reducerRegistry.register(reducerName, reducer);
+
+export const setMemberData = createAction(SET_MEMBER_DATA);
 
 // packs
 

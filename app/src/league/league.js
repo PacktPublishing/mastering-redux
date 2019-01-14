@@ -1,7 +1,7 @@
 import produce from 'immer';
 import { createAction } from 'redux-actions';
 import { handle } from 'redux-pack';
-import { ADD_TEAM } from 'team';
+import { ADD_TEAM } from 'team/team';
 import reducerRegistry from 'reducerRegistry';
 import API from 'api.service';
 

@@ -20,8 +20,7 @@
     {
       "id": 1,
       "name": "Member 1",
-      "teamId": 1,
-      "detailsId": 1
+      "teamId": 1
     },
     {
       "name": "New Member",

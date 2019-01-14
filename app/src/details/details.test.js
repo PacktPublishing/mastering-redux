@@ -3,9 +3,9 @@ import reducer, {
   initialState,
   GET_DETAILS_DATA,
   EDIT_DETAILS_ENTRY
-} from 'details';
+} from 'details/details';
 
-import { CREATE_MEMBER_AND_DETAILS } from 'member';
+import { CREATE_MEMBER_AND_DETAILS } from 'member/member';
 
 import { makePackAction } from 'store-utils';
 

@@ -4,7 +4,7 @@ import reducer, {
   CREATE_MEMBER_AND_DETAILS,
   UPDATE_MEMBER_NAME,
   GET_MEMBER_DATA
-} from 'member';
+} from 'member/member';
 import { makePackAction } from 'store-utils';
 
 const defaultState = {

@@ -4,8 +4,8 @@ import reducer, {
   GET_LEAGUE_DATA,
   SET_ACTIVE_LEAGUE,
   UPDATE_LEAGUE_NAME,
-} from 'league';
-import { ADD_TEAM } from 'team';
+} from 'league/league';
+import { ADD_TEAM } from 'team/team';
 import { makePackAction } from 'store-utils';
 
 const defaultState = {
