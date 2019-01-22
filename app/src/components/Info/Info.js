@@ -6,10 +6,10 @@ function Info(props) {
   const { name, id, details, edit } = props;
   return (
     <React.Fragment>
-      <PanelTitle>{name} – {id}</PanelTitle>
-      {details &&
-        <Details id={id} details={details} edit={edit} />
-      }
+      <PanelTitle>
+        {name} – {id}
+      </PanelTitle>
+      {details && <Details id={id} details={details} edit={edit} />}
     </React.Fragment>
   );
 }

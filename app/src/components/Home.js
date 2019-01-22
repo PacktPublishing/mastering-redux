@@ -1,14 +1,11 @@
 import React from 'react';
 import { PanelTitle, Link } from 'components/UI';
-function Home(props) {
+
+function Home() {
   return (
     <div>
-      <PanelTitle>
-        Welcome to Mastering Redux
-      </PanelTitle>
-      <Link to={{ type: 'PANEL_ROUTE' }}>
-        start
-      </Link>
+      <PanelTitle>Welcome to Mastering Redux</PanelTitle>
+      <Link to={{ type: 'PANEL_ROUTE' }}>start</Link>
     </div>
   );
 }

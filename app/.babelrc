@@ -1,0 +1,16 @@
+{
+  "presets": [
+    ["@babel/env", {
+      "useBuiltIns": "entry"
+    }],
+    "@babel/preset-react"
+  ],
+  "plugins": [
+    "@babel/plugin-syntax-object-rest-spread",
+    ["@babel/plugin-proposal-class-properties", { "spec": true }],
+    "react-hot-loader/babel",
+    "@babel/plugin-syntax-dynamic-import",
+    "babel-plugin-styled-components",
+    "universal-import"
+  ]
+}

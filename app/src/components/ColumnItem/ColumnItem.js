@@ -2,7 +2,15 @@ import React from 'react';
 import * as Ui from 'components/UI';
 
 function ColumnItem(props) {
-  const { type, item, addItem, setActiveItem, updateName, style, activeId } = props;
+  const {
+    type,
+    item,
+    addItem,
+    setActiveItem,
+    updateName,
+    style,
+    activeId
+  } = props;
   const isActive = activeId === item.id;
   return (
     <Ui.PanelBox

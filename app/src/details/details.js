@@ -1,8 +1,11 @@
 import produce from 'immer';
 import { handle } from 'redux-pack';
-import reducerRegistry from 'reducerRegistry';
-import API from 'api.service';
-import { CREATE_MEMBER_AND_DETAILS, SET_MEMBER_WITH_DETAILS_ENTRY } from 'member/member';
+import reducerRegistry from 'src/reducerRegistry';
+import API from 'src/api.service';
+import {
+  CREATE_MEMBER_AND_DETAILS,
+  SET_MEMBER_WITH_DETAILS_ENTRY
+} from 'src/member/member';
 
 const reducerName = 'details';
 
@@ -16,18 +19,20 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case CREATE_MEMBER_AND_DETAILS: {
       return handle(state, action, {
-        success: s => produce(s, draft => {
-          const { entry } = action.payload;
-          draft.data[entry.id] = entry;
-        })
+        success: s =>
+          produce(s, draft => {
+            const { entry } = action.payload;
+            draft.data[entry.id] = entry;
+          })
       });
     }
     case EDIT_DETAILS_ENTRY: {
       return handle(state, action, {
-        success: s => produce(s, draft => {
-          const entry = action.payload;
-          Object.assign(draft.data[entry.id], entry);
-        })
+        success: s =>
+          produce(s, draft => {
+            const entry = action.payload;
+            Object.assign(draft.data[entry.id], entry);
+          })
       });
     }
     case SET_MEMBER_WITH_DETAILS_ENTRY: {

@@ -13,6 +13,7 @@ Result.prototype.render = function render() {
 Result.prototype.getData = function getData() {
   fetch(`${window.API_URL}/result`)
     .then(res => res.json())
-    .then(data => this.store.dispatch({ type: 'RESULT__SET_DATA', payload: data }));
+    .then(data =>
+      this.store.dispatch({ type: "RESULT__SET_DATA", payload: data })
+    );
 };
-

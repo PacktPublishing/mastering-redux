@@ -6,11 +6,11 @@ import reducer, {
   UPDATE_MEMBER_NAME,
   GET_MEMBER_DATA,
   setMemberWithDetailsEntry
-} from 'member/member';
-import { makePackAction } from 'store-utils';
-import { onNavigationToInfo } from 'member/member.saga';
-import { getInfoDetails, getInfoEntityDataItem } from 'selectors';
-import API from 'api.service';
+} from 'src/member/member';
+import { makePackAction } from 'src/store-utils';
+import { onNavigationToInfo } from 'src/member/member.saga';
+import { getInfoDetails, getInfoEntityDataItem } from 'src/selectors';
+import API from 'src/api.service';
 
 const defaultState = {
   ...initialState,
@@ -97,6 +97,8 @@ describe('onNavigationToInfo saga', () => {
   });
 
   it('Tests dispatch of SET_MEMBER_WITH_DETAILS_ENTRY action', () => {
-    expect(generator.next(details).value).toEqual(put(setMemberWithDetailsEntry({ entity, details })));
-  })
+    expect(generator.next(details).value).toEqual(
+      put(setMemberWithDetailsEntry({ entity, details }))
+    );
+  });
 });

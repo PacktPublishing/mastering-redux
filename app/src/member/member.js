@@ -1,9 +1,8 @@
 import produce from 'immer';
 import { createAction } from 'redux-actions';
 import { handle } from 'redux-pack';
-import reducerRegistry from 'reducerRegistry';
-import API from 'api.service';
-
+import reducerRegistry from 'src/reducerRegistry';
+import API from 'src/api.service';
 
 const reducerName = 'member';
 
@@ -23,34 +22,56 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case GET_MEMBER_DATA: {
       return handle(state, action, {
-        start: s => produce(s, draft => { draft.loading = true; }),
-        finish: s => produce(s, draft => { draft.loading = false; }),
-        success: s => produce(s, draft => {
-          draft.data = {};
-          action.payload.forEach(item => { draft.data[item.id] = item; });
-        })
+        start: s =>
+          produce(s, draft => {
+            draft.loading = true;
+          }),
+        finish: s =>
+          produce(s, draft => {
+            draft.loading = false;
+          }),
+        success: s =>
+          produce(s, draft => {
+            draft.data = {};
+            action.payload.forEach(item => {
+              draft.data[item.id] = item;
+            });
+          })
       });
     }
     case CREATE_MEMBER_AND_DETAILS: {
       return handle(state, action, {
-        start: s => produce(s, draft => { draft.loading = true; }),
-        finish: s => produce(s, draft => { draft.loading = false; }),
-        success: s => produce(s, draft => {
-          const { member } = action.payload;
-          draft.data[member.id] = { ...defaultMember, ...member };
-        })
+        start: s =>
+          produce(s, draft => {
+            draft.loading = true;
+          }),
+        finish: s =>
+          produce(s, draft => {
+            draft.loading = false;
+          }),
+        success: s =>
+          produce(s, draft => {
+            const { member } = action.payload;
+            draft.data[member.id] = { ...defaultMember, ...member };
+          })
       });
     }
     case UPDATE_MEMBER_NAME: {
       return handle(state, action, {
-        start: s => produce(s, draft => { draft.loading = true; }),
-        finish: s => produce(s, draft => { draft.loading = false; }),
-        success: s => produce(s, draft => {
-          const { name, id } = action.payload;
-          draft.data[id].name = name;
-        })
+        start: s =>
+          produce(s, draft => {
+            draft.loading = true;
+          }),
+        finish: s =>
+          produce(s, draft => {
+            draft.loading = false;
+          }),
+        success: s =>
+          produce(s, draft => {
+            const { name, id } = action.payload;
+            draft.data[id].name = name;
+          })
       });
-
     }
     case SET_MEMBER_WITH_DETAILS_ENTRY: {
       const { entity } = action.payload;
@@ -65,7 +86,9 @@ export default function reducer(state = initialState, action) {
 
 reducerRegistry.register(reducerName, reducer);
 
-export const setMemberWithDetailsEntry = createAction(SET_MEMBER_WITH_DETAILS_ENTRY);
+export const setMemberWithDetailsEntry = createAction(
+  SET_MEMBER_WITH_DETAILS_ENTRY
+);
 
 // packs
 
@@ -76,16 +99,14 @@ export const getMemberData = () => ({
 
 export const createMemberAndDetails = ({ teamId }) => {
   const member = { ...defaultMember, teamId };
-  const promise = API.post('members', member)
-    .then(memberResponse => {
-      const entry = { ...defaultDetails, _memberId: memberResponse.id };
-      return API.post('details', entry)
-        .then(entryResponse => {
-          const newMember = { ...member, id: memberResponse.id };
-          const newEntry = { ...entry, id: entryResponse.id };
-          return { member: newMember, entry: newEntry };
-        });
+  const promise = API.post('members', member).then(memberResponse => {
+    const entry = { ...defaultDetails, _memberId: memberResponse.id };
+    return API.post('details', entry).then(entryResponse => {
+      const newMember = { ...member, id: memberResponse.id };
+      const newEntry = { ...entry, id: entryResponse.id };
+      return { member: newMember, entry: newEntry };
     });
+  });
 
   return {
     type: CREATE_MEMBER_AND_DETAILS,

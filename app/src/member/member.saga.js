@@ -1,7 +1,7 @@
 import { put, select, all, fork, call, takeEvery } from 'redux-saga/effects';
-import { getInfoDetails, getInfoEntityDataItem } from 'selectors';
-import { setMemberWithDetailsEntry } from 'member/member';
-import API from 'api.service';
+import { getInfoDetails, getInfoEntityDataItem } from 'src/selectors';
+import { setMemberWithDetailsEntry } from 'src/member/member';
+import API from 'src/api.service';
 
 const ENTITIES_WITH_DETAILS = ['member'];
 
@@ -15,10 +15,10 @@ export function* onNavigationToInfo(action) {
     const entry = yield select(getInfoDetails);
     if (entry === null) {
       const details = yield call(API, 'details');
-      const action = {
+      const actionFn = {
         member: setMemberWithDetailsEntry
       }[level];
-      yield put(action({ entity: entityItem, details }));
+      yield put(actionFn({ entity: entityItem, details }));
     }
   }
 }
@@ -28,8 +28,6 @@ function* fetchDetailsOnNavigationToInfo() {
 }
 
 export default function* memberSaga() {
-  const sagas = [
-    fetchDetailsOnNavigationToInfo
-  ];
+  const sagas = [fetchDetailsOnNavigationToInfo];
   yield all(sagas.map(saga => fork(saga)));
 }

@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Panels from 'components/Panels/Panels';
-import { getPanelColumns } from 'selectors';
-import { getLeagueData } from 'league/league';
-import { getTeamData } from 'team/team';
-import { getMemberData } from 'member/member';
+import { getPanelColumns } from 'src/selectors';
+import { getLeagueData } from 'src/league/league';
+import { getTeamData } from 'src/team/team';
+import { getMemberData } from 'src/member/member';
 
 const mapStateToProps = state => ({
   columns: getPanelColumns(state)

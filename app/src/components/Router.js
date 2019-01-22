@@ -1,42 +1,19 @@
-import React  from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
+import universal from 'react-universal-component';
 
 const mapStateToProps = state => {
   const { type, routesMap } = state.location;
   return { route: routesMap[type] };
 };
 
-class Router extends React.PureComponent {
-  state = {
-    Page: null,
-    currentPage: null
-  };
+const UniversalComponent = universal(props =>
+  import(`components/${props.page}.js`)
+);
 
-  componentDidMount() {
-    this.loadPage();
-  }
-
-  componentDidUpdate(prevProps) {
-    if(prevProps.route !== this.props.route) {
-      this.loadPage();
-    }
-  }
-
-  loadPage() {
-    const { route } = this.props;
-    import(`components/${route.page}.js`)
-      .then(module => this.setState({
-        Page: module.default,
-        currentPage: route.page
-      }));
-  }
-
-  render() {
-    const { Page, currentPage } = this.state;
-    const { route } = this.props;
-    if (currentPage !== route.page) return null;
-    return (<Page />);
-  }
+function Router(props) {
+  const { route } = props;
+  return <UniversalComponent page={route.page} />;
 }
 
 export default connect(mapStateToProps)(Router);

@@ -1,13 +1,12 @@
 import styled from 'styled-components';
 import React from 'react';
-import { COLORS, FONTS, SIZES } from 'components/theme';
-
+import { COLORS } from 'components/theme';
 
 const Input = styled.input`
   width: 100%;
   color: ${COLORS.text};
   font-size: 11px;
-  line-height: ${p => p.flat ? 1 : 1.8};
+  line-height: ${p => (p.flat ? 1 : 1.8)};
   font-weight: 300;
   background-color: transparent;
   border: 0;
@@ -15,7 +14,7 @@ const Input = styled.input`
 `;
 
 const InputContainer = styled.div`
-  margin: ${p => p.flat ? 0 : '0 0 10px'};
+  margin: ${p => (p.flat ? 0 : '0 0 10px')};
 
   &::after {
     content: '';

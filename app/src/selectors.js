@@ -23,7 +23,9 @@ export const getLeaguesIds = createSelector(
 export const getActiveTeamsIds = createSelector(
   [getActiveLeague, getAllTeams],
   (activeLeague, teams = {}) => {
-    const activeTeams = Object.values(teams).filter(t => t.leagueId === activeLeague);
+    const activeTeams = Object.values(teams).filter(
+      t => t.leagueId === activeLeague
+    );
     return activeTeams.map(t => t.id);
   }
 );
@@ -31,13 +33,22 @@ export const getActiveTeamsIds = createSelector(
 export const getActiveMembersIds = createSelector(
   [getActiveTeam, getAllMembers],
   (activeTeam, members = {}) => {
-    const activeMembers = Object.values(members).filter(m => m.teamId === activeTeam);
+    const activeMembers = Object.values(members).filter(
+      m => m.teamId === activeTeam
+    );
     return activeMembers.map(m => m.id);
   }
 );
 
 export const getPanelColumns = createSelector(
-  [getLeaguesIds, getActiveTeamsIds, getActiveMembersIds, getLeaguesLoading, getTeamsLoading, getMembesrLoading],
+  [
+    getLeaguesIds,
+    getActiveTeamsIds,
+    getActiveMembersIds,
+    getLeaguesLoading,
+    getTeamsLoading,
+    getMembesrLoading
+  ],
   (leagues, teams, members, leaguesLoading, teamsLoading, membersLoading) => [
     {
       items: leagues,
@@ -57,24 +68,22 @@ export const getPanelColumns = createSelector(
   ]
 );
 
-export const getInfoEntityDataItem = createSelector([
-  getAllLeagues,
-  getAllTeams,
-  getAllMembers,
-  getLocationPayload
-], (league, team, member, payload) => {
-  const { level, id } = payload;
-  const entities = { league, team, member };
-  return entities[level] && entities[level][id];
-});
+export const getInfoEntityDataItem = createSelector(
+  [getAllLeagues, getAllTeams, getAllMembers, getLocationPayload],
+  (league, team, member, payload) => {
+    const { level, id } = payload;
+    const entities = { league, team, member };
+    return entities[level] && entities[level][id];
+  }
+);
 
-export const getInfoDetails = createSelector([
-  getLocationPayload,
-  getAllDetails
-], (payload, details) => {
-  if (!details) return null;
-  const { level, id } = payload;
-  const detailsList = details ? Object.values(details) : [];
-  const entry = detailsList.find(e => e[`_${level}Id`] === parseInt(id, 10));
-  return entry || null;
-});
+export const getInfoDetails = createSelector(
+  [getLocationPayload, getAllDetails],
+  (payload, details) => {
+    if (!details) return null;
+    const { level, id } = payload;
+    const detailsList = details ? Object.values(details) : [];
+    const entry = detailsList.find(e => e[`_${level}Id`] === parseInt(id, 10));
+    return entry || null;
+  }
+);

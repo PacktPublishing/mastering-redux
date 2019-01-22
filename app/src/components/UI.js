@@ -6,8 +6,6 @@ import { COLORS, FONTS, SIZES } from 'components/theme';
 export { default as Normalizr } from 'components/Normalizr';
 export { default as PanelInput } from 'components/PanelInput';
 
-
-
 export const Main = styled.main`
   padding: 60px 40px;
   background-color: ${COLORS.main};
@@ -31,7 +29,7 @@ export const PanelHeader = styled.div`
 `;
 
 export const PanelTitle = styled.p`
-  font-size: ${p => p.small ? SIZES.small : SIZES.medium};
+  font-size: ${p => (p.small ? SIZES.small : SIZES.medium)};
   color: ${COLORS.text};
   text-transform: capitalize;
 `;
@@ -39,8 +37,8 @@ export const PanelTitle = styled.p`
 export const PanelBox = styled.div`
   padding: 8px;
   border: 0;
-  border-bottom: solid 1px ${p => p.active ? COLORS.main : COLORS.border};
-  background-color: ${p => p.active ? COLORS.accent : 'transparent'};
+  border-bottom: solid 1px ${p => (p.active ? COLORS.main : COLORS.border)};
+  background-color: ${p => (p.active ? COLORS.accent : 'transparent')};
 `;
 
 export const Button = styled.button`
@@ -48,15 +46,16 @@ export const Button = styled.button`
   padding: 5px 2px;
   color: ${COLORS.text};
   background-color: transparent;
-  border: 1px solid ${p => p.active ? 'rgba(255, 255, 255, 0.3)' : COLORS.border};
+  border: 1px solid
+    ${p => (p.active ? 'rgba(255, 255, 255, 0.3)' : COLORS.border)};
   font-size: ${SIZES.small};
   text-transform: uppercase;
   cursor: pointer;
   margin: 0 5px 10px 0;
 
   &:hover {
-    border-color: ${p => p.active ? COLORS.accent : COLORS.main};
-    background-color: ${p => p.active ? COLORS.main : COLORS.accent};
+    border-color: ${p => (p.active ? COLORS.accent : COLORS.main)};
+    background-color: ${p => (p.active ? COLORS.main : COLORS.accent)};
   }
 
   &:last-child {
@@ -90,13 +89,14 @@ const AddButtonContainer = styled.button`
   }
 `;
 
-export const AddButton = p => (
+export const AddButton = () => (
   <AddButtonContainer>
     <span>+</span>
   </AddButtonContainer>
 );
 
 export const Link = styled(RFRLink)`
+  display: inline-flex;
   padding: 5px 2px;
   color: ${COLORS.main};
   background-color: ${COLORS.text};
@@ -106,11 +106,11 @@ export const Link = styled(RFRLink)`
   cursor: pointer;
   margin: 0 5px 0 0;
   text-decoration: none;
-  
+
   &:hover {
     text-decoration: underline;
   }
-  
+
   &:last-child {
     margin: 0;
   }
@@ -129,19 +129,19 @@ export const Spinner = styled.div`
   border-left: 8px solid ${COLORS.text};
   transform: translateZ(0);
   animation: load 1.1s infinite linear;
-  
+
   &::after {
     content: '';
     border-radius: 100%;
     width: 8px;
     height: 8px;
   }
-  
+
   @keyframes load {
     0% {
       transform: rotate(0deg);
     }
-    100% {      
+    100% {
       transform: rotate(360deg);
     }
   }

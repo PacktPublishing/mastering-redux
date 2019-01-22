@@ -1,10 +1,10 @@
 import produce from 'immer';
 import { createAction } from 'redux-actions';
 import { handle } from 'redux-pack';
-import { SET_ACTIVE_LEAGUE } from 'league/league';
-import { CREATE_MEMBER_AND_DETAILS } from 'member/member';
-import reducerRegistry from 'reducerRegistry';
-import API from 'api.service';
+import { SET_ACTIVE_LEAGUE } from 'src/league/league';
+import { CREATE_MEMBER_AND_DETAILS } from 'src/member/member';
+import reducerRegistry from 'src/reducerRegistry';
+import API from 'src/api.service';
 
 const reducerName = 'team';
 
@@ -25,12 +25,21 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case GET_TEAM_DATA: {
       return handle(state, action, {
-        start: s => produce(s, draft => { draft.loading = true }),
-        finish: s => produce(s, draft => { draft.loading = false }),
-        success: s => produce(s, draft => {
-          draft.data = {};
-          action.payload.forEach(item => { draft.data[item.id] = item; });
-        })
+        start: s =>
+          produce(s, draft => {
+            draft.loading = true;
+          }),
+        finish: s =>
+          produce(s, draft => {
+            draft.loading = false;
+          }),
+        success: s =>
+          produce(s, draft => {
+            draft.data = {};
+            action.payload.forEach(item => {
+              draft.data[item.id] = item;
+            });
+          })
       });
     }
     case SET_ACTIVE_TEAM: {
@@ -45,31 +54,46 @@ export default function reducer(state = initialState, action) {
     }
     case ADD_TEAM: {
       return handle(state, action, {
-        start: s => produce(s, draft => { draft.loading = true; }),
-        finish: s => produce(s, draft => { draft.loading = false; }),
-        success: s => produce(s, draft => {
-          const team = action.payload;
-          draft.data[team.id] = { ...defaultTeam, ...team };
-          draft.active = null;
-        })
+        start: s =>
+          produce(s, draft => {
+            draft.loading = true;
+          }),
+        finish: s =>
+          produce(s, draft => {
+            draft.loading = false;
+          }),
+        success: s =>
+          produce(s, draft => {
+            const team = action.payload;
+            draft.data[team.id] = { ...defaultTeam, ...team };
+            draft.active = null;
+          })
       });
     }
     case CREATE_MEMBER_AND_DETAILS: {
       return handle(state, action, {
-        success: s => produce(s, draft => {
-          const { member } = action.payload;
-          draft.active = member.teamId;
-        })
+        success: s =>
+          produce(s, draft => {
+            const { member } = action.payload;
+            draft.active = member.teamId;
+          })
       });
     }
     case UPDATE_TEAM_NAME: {
       return handle(state, action, {
-        start: s => produce(s, draft => { draft.loading = true; }),
-        finish: s => produce(s, draft => { draft.loading = false; }),
-        success: s => produce(s, draft => {
-          const { name, id } = action.payload;
-          draft.data[id].name = name;
-        })
+        start: s =>
+          produce(s, draft => {
+            draft.loading = true;
+          }),
+        finish: s =>
+          produce(s, draft => {
+            draft.loading = false;
+          }),
+        success: s =>
+          produce(s, draft => {
+            const { name, id } = action.payload;
+            draft.data[id].name = name;
+          })
       });
     }
     default:

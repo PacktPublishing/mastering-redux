@@ -1,9 +1,9 @@
 import produce from 'immer';
 import { createAction } from 'redux-actions';
 import { handle } from 'redux-pack';
-import { ADD_TEAM } from 'team/team';
-import reducerRegistry from 'reducerRegistry';
-import API from 'api.service';
+import { ADD_TEAM } from 'src/team/team';
+import reducerRegistry from 'src/reducerRegistry';
+import API from 'src/api.service';
 
 const reducerName = 'league';
 
@@ -21,13 +21,20 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case GET_LEAGUE_DATA: {
       return handle(state, action, {
-        start: s => produce(s, draft => { draft.loading = true; }),
-        finish: s => produce(s, draft => { draft.loading = false; }),
-        success: s => produce(s, draft => {
-          action.payload.forEach(item => {
-            draft.data[item.id] = item;
-          });
-        })
+        start: s =>
+          produce(s, draft => {
+            draft.loading = true;
+          }),
+        finish: s =>
+          produce(s, draft => {
+            draft.loading = false;
+          }),
+        success: s =>
+          produce(s, draft => {
+            action.payload.forEach(item => {
+              draft.data[item.id] = item;
+            });
+          })
       });
     }
     case SET_ACTIVE_LEAGUE: {
@@ -44,10 +51,11 @@ export default function reducer(state = initialState, action) {
     }
     case ADD_TEAM: {
       return handle(state, action, {
-        success: s => produce(s, draft => {
-          const team = action.payload;
-          draft.active = team.leagueId;
-        })
+        success: s =>
+          produce(s, draft => {
+            const team = action.payload;
+            draft.active = team.leagueId;
+          })
       });
     }
     default:

@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import ColumnItem from 'components/ColumnItem/ColumnItem';
-import { addTeam, setActiveTeam, updateTeamName } from 'team/team';
-import { createMemberAndDetails, updateMemberName } from 'member/member';
-import { setActiveLeague, updateLeagueName } from 'league/league';
+import { addTeam, setActiveTeam, updateTeamName } from 'src/team/team';
+import { createMemberAndDetails, updateMemberName } from 'src/member/member';
+import { setActiveLeague, updateLeagueName } from 'src/league/league';
 import { debounce } from 'lodash-es';
 
 function mapStateToProps(state, ownProps) {
@@ -21,7 +21,7 @@ const mapDispatchToProps = {
   setActiveLeague,
   updateLeagueName,
   updateMemberName,
-  addMember: createMemberAndDetails,
+  addMember: createMemberAndDetails
 };
 
 class ColumnItemContainer extends React.PureComponent {
@@ -66,4 +66,7 @@ class ColumnItemContainer extends React.PureComponent {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ColumnItemContainer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ColumnItemContainer);

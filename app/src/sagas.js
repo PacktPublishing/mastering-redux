@@ -1,5 +1,5 @@
 import { all, fork } from 'redux-saga/effects';
-import memberSaga from 'member/member.saga';
+import memberSaga from 'src/member/member.saga';
 
 const sagas = [memberSaga];
 

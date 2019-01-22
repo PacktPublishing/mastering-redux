@@ -3,10 +3,10 @@ import reducer, {
   initialState,
   GET_LEAGUE_DATA,
   SET_ACTIVE_LEAGUE,
-  UPDATE_LEAGUE_NAME,
-} from 'league/league';
-import { ADD_TEAM } from 'team/team';
-import { makePackAction } from 'store-utils';
+  UPDATE_LEAGUE_NAME
+} from 'src/league/league';
+import { ADD_TEAM } from 'src/team/team';
+import { makePackAction } from 'src/store-utils';
 
 const defaultState = {
   ...initialState,
@@ -21,11 +21,11 @@ describe('League reducer', () => {
   const state = { ...defaultState, active: league };
 
   it(`Test ${GET_LEAGUE_DATA} action`, () => {
-    const array = [
-      { id: 1, name: 'League 1' },
-      { id: 2, name: 'League 2' }
-    ];
-    const action = makePackAction(LIFECYCLE.SUCCESS, { type: GET_LEAGUE_DATA, payload: array });
+    const array = [{ id: 1, name: 'League 1' }, { id: 2, name: 'League 2' }];
+    const action = makePackAction(LIFECYCLE.SUCCESS, {
+      type: GET_LEAGUE_DATA,
+      payload: array
+    });
     const newState = reducer(state, action);
     expect(newState.data).toEqual({
       1: array[0],
@@ -49,7 +49,10 @@ describe('League reducer', () => {
 
   it(`Test ${ADD_TEAM} action`, () => {
     const newTeam = { id: 1, leagueId: 5 };
-    const action = makePackAction(LIFECYCLE.SUCCESS, { type: ADD_TEAM, payload: newTeam });
+    const action = makePackAction(LIFECYCLE.SUCCESS, {
+      type: ADD_TEAM,
+      payload: newTeam
+    });
     const newState = reducer(state, action);
     expect(newState).toEqual({
       ...state,

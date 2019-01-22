@@ -1,3 +1,4 @@
+import '@babel/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
@@ -5,9 +6,14 @@ import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { middleware as reduxPackMiddleware } from 'redux-pack';
 import createSagaMiddleware from 'redux-saga';
-import reducerRegistry from 'reducerRegistry';
-import { locationReducer, locationMiddleware, locationEnhancer, locationStart } from 'router';
-import { loggerMiddleware, localStorageEnhancer } from 'store-utils';
+import reducerRegistry from 'src/reducerRegistry';
+import {
+  locationReducer,
+  locationMiddleware,
+  locationEnhancer,
+  locationStart
+} from 'src/router';
+import { localStorageEnhancer } from 'src/store-utils';
 import { rootSaga } from './sagas';
 
 const composeEnhancers =
@@ -40,7 +46,7 @@ const enhancer = composeEnhancers(
   applyMiddleware(
     locationMiddleware,
     sagaMiddleware,
-    reduxPackMiddleware,
+    reduxPackMiddleware
     // loggerMiddleware
   )
 );

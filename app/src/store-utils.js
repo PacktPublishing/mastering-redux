@@ -8,7 +8,6 @@ export const loggerMiddleware = store => next => action => {
   return result;
 };
 
-
 function createLocaleStorageEnhancer() {
   const STATE_KEY = 'UNIQUE_KEY';
 
@@ -22,12 +21,17 @@ function createLocaleStorageEnhancer() {
 
   function setLocalStorageState(state, action) {
     const newState = JSON.stringify(state);
-    console.info(`${action.type} state change ––- saving state to localStorage.`);
+    console.info(
+      `${action.type} state change ––- saving state to localStorage.`
+    );
     localStorage.setItem(STATE_KEY, newState);
   }
 
-  const localStorageEnhancerFn = createStore => (reducer, preloadedState, enhancer) => {
-
+  const localStorageEnhancerFn = createStore => (
+    reducer,
+    preloadedState,
+    enhancer
+  ) => {
     const initialState = getLocalStorageState() || preloadedState;
 
     const store = createStore(reducer, initialState, enhancer);
@@ -39,7 +43,7 @@ function createLocaleStorageEnhancer() {
         const result = store.getState();
         setLocalStorageState(result, action);
       }
-    }
+    };
   };
 
   localStorageEnhancerFn.getLocalStorageState = getLocalStorageState;
@@ -48,13 +52,13 @@ function createLocaleStorageEnhancer() {
 
 export const localStorageEnhancer = createLocaleStorageEnhancer();
 
-export function makePackAction(lifecycle, { type, payload, meta={} }) {
+export function makePackAction(lifecycle, { type, payload, meta = {} }) {
   return {
     type,
     payload,
     meta: {
       ...meta,
-      [KEY.LIFECYCLE]: lifecycle,
-    },
-  }
+      [KEY.LIFECYCLE]: lifecycle
+    }
+  };
 }
