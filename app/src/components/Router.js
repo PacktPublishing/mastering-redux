@@ -8,7 +8,7 @@ const mapStateToProps = state => {
 };
 
 const UniversalComponent = universal(props =>
-  import(`components/${props.page}.js`)
+  import(`components/${props.page}`)
 );
 
 function Router(props) {

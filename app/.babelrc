@@ -11,6 +11,6 @@
     "react-hot-loader/babel",
     "@babel/plugin-syntax-dynamic-import",
     "babel-plugin-styled-components",
-    "universal-import"
+    "babel-plugin-universal-import"
   ]
 }

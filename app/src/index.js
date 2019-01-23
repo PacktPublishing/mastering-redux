@@ -13,22 +13,16 @@ import {
   locationEnhancer,
   locationStart
 } from 'src/router';
-import { localStorageEnhancer } from 'src/store-utils';
 import { rootSaga } from './sagas';
 
-const composeEnhancers =
-  (process.env.NODE_ENV === 'development' &&
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
-  compose;
+const composeEnhancers = compose;
 
 reducerRegistry.register('location', locationReducer);
 
-const rehydratedState = localStorageEnhancer.getLocalStorageState();
-
 const combine = reducers => {
   const reducerNames = Object.keys(reducers);
-  if (rehydratedState) {
-    Object.keys(rehydratedState).forEach(item => {
+  if (null) {
+    Object.keys({}).forEach(item => {
       if (!reducerNames.includes(item)) {
         reducers[item] = (state = null) => state;
       }
@@ -54,7 +48,7 @@ const enhancer = composeEnhancers(
 // const middlewareEnhancer = applyMiddleware(locationMiddleware, reduxPackMiddleware, loggerMiddleware);
 // const enhancer = cs => locationEnhancer(middlewareEnhancer(localStorageEnhancer(cs)));
 
-const store = createStore(reducer, rehydratedState, enhancer);
+const store = createStore(reducer, undefined, enhancer);
 sagaMiddleware.run(rootSaga);
 locationStart();
 
@@ -62,9 +56,12 @@ reducerRegistry.setChangeListener(reducers => {
   store.replaceReducer(combine(reducers));
 });
 
-ReactDOM.render(
+export const getApp = () => (
   <Provider store={store}>
     <App />
-  </Provider>,
-  document.getElementById('root')
+  </Provider>
 );
+
+if (typeof window !== 'undefined') {
+  ReactDOM.hydrate(getApp(), document.getElementById('root'));
+}
