@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
 
@@ -22,7 +23,7 @@ module.exports = {
     filename: '[name].js',
     chunkFilename: '[name].js',
     libraryTarget: 'commonjs2',
-    path: path.resolve(__dirname, '..', '..', 'dist', 'server')
+    path: path.resolve(__dirname, '..', '..', 'dist')
   },
   externals,
   target: 'node',
@@ -41,5 +42,18 @@ module.exports = {
         use: ['babel-loader']
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.optimize.ModuleConcatenationPlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production')
+      }
+    }),
+    new webpack.HashedModuleIdsPlugin()
+  ]
 };

@@ -1,26 +1,38 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const srcPath = path.join(__dirname, '..', 'src');
 
 module.exports = {
-  entry: path.join(srcPath, 'index'),
+  mode: 'development',
+  entry: {
+    main: path.join(srcPath, 'index.js')
+  },
   output: {
     filename: '[name].js',
-    chunkFilename: '[name].js',
-    path: path.resolve(__dirname, '..', 'dist', 'client'),
+    chunkFilename: '[name]',
+    path: path.resolve(__dirname, '..', 'dist'),
     publicPath: '/static/'
   },
   plugins: [
+    new CleanWebpackPlugin([path.resolve(__dirname, '..', 'dist')], {
+      allowExternal: true
+    }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.resolve(srcPath, 'index.html'),
       inject: 'body'
     }),
+    new webpack.optimize.ModuleConcatenationPlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({
-      NODE_ENV: process.env.NODE_ENV
-    })
+      'process.env': {
+        NODE_ENV: JSON.stringify('production')
+      }
+    }),
+    new webpack.HashedModuleIdsPlugin()
   ],
   resolve: {
     alias: {

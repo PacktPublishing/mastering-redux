@@ -7,13 +7,11 @@ const mapStateToProps = state => {
   return { route: routesMap[type] };
 };
 
-const UniversalComponent = universal(props =>
-  import(`components/${props.page}`)
-);
+const Universal = universal(props => import(`./${props.page}`));
 
 function Router(props) {
   const { route } = props;
-  return <UniversalComponent page={route.page} />;
+  return <Universal page={route.page} />;
 }
 
 export default connect(mapStateToProps)(Router);

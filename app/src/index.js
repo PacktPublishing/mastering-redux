@@ -1,67 +1,8 @@
 import '@babel/polyfill';
-import React from 'react';
+import getApp from 'src/getApp';
 import ReactDOM from 'react-dom';
-import App from './components/App';
-import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
-import { Provider } from 'react-redux';
-import { middleware as reduxPackMiddleware } from 'redux-pack';
-import createSagaMiddleware from 'redux-saga';
-import reducerRegistry from 'src/reducerRegistry';
-import {
-  locationReducer,
-  locationMiddleware,
-  locationEnhancer,
-  locationStart
-} from 'src/router';
-import { rootSaga } from './sagas';
+import getStore from 'src/store';
 
-const composeEnhancers = compose;
+const store = getStore(window.REDUX_STATE);
 
-reducerRegistry.register('location', locationReducer);
-
-const combine = reducers => {
-  const reducerNames = Object.keys(reducers);
-  if (null) {
-    Object.keys({}).forEach(item => {
-      if (!reducerNames.includes(item)) {
-        reducers[item] = (state = null) => state;
-      }
-    });
-  }
-  return combineReducers(reducers);
-};
-
-const reducer = combine(reducerRegistry.getReducers());
-
-const sagaMiddleware = createSagaMiddleware();
-
-const enhancer = composeEnhancers(
-  locationEnhancer,
-  applyMiddleware(
-    locationMiddleware,
-    sagaMiddleware,
-    reduxPackMiddleware
-    // loggerMiddleware
-  )
-);
-
-// const middlewareEnhancer = applyMiddleware(locationMiddleware, reduxPackMiddleware, loggerMiddleware);
-// const enhancer = cs => locationEnhancer(middlewareEnhancer(localStorageEnhancer(cs)));
-
-const store = createStore(reducer, undefined, enhancer);
-sagaMiddleware.run(rootSaga);
-locationStart();
-
-reducerRegistry.setChangeListener(reducers => {
-  store.replaceReducer(combine(reducers));
-});
-
-export const getApp = () => (
-  <Provider store={store}>
-    <App />
-  </Provider>
-);
-
-if (typeof window !== 'undefined') {
-  ReactDOM.hydrate(getApp(), document.getElementById('root'));
-}
+ReactDOM.hydrate(getApp(store), document.getElementById('root'));

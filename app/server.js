@@ -1,6 +1,6 @@
 const express = require('express');
 const webpack = require('webpack');
-const clientConfig = require('./config/webpack.config.dev');
+const clientConfig = require('./config/webpack.config');
 const serverConfig = require('./config/server/webpack.config');
 
 const { publicPath } = clientConfig.output;
@@ -18,10 +18,8 @@ const done = () =>
 
 webpack([clientConfig, serverConfig]).run((err, stats) => {
   const clientStats = stats.toJson().children[0];
-  const serverRender = require('./dist/server/server.js').default;
-
   app.use(publicPath, express.static(outputPath));
-  app.get('*', serverRender({ clientStats }));
-
+  const serverRender = require('./dist/server.js').default;
+  app.use(serverRender({ clientStats }));
   done();
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import ColumnItem from 'components/ColumnItem/ColumnItem';
+import ColumnItem from 'components/ColumnItem';
 import { addTeam, setActiveTeam, updateTeamName } from 'src/team/team';
 import { createMemberAndDetails, updateMemberName } from 'src/member/member';
 import { setActiveLeague, updateLeagueName } from 'src/league/league';
