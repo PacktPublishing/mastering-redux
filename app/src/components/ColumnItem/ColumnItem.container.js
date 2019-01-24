@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import ColumnItem from 'components/ColumnItem';
+import ColumnItem from 'components/ColumnItem/ColumnItem';
 import { addTeam, setActiveTeam, updateTeamName } from 'src/team/team';
 import { createMemberAndDetails, updateMemberName } from 'src/member/member';
 import { setActiveLeague, updateLeagueName } from 'src/league/league';
-import { debounce } from 'lodash-es';
+import debounce from 'lodash/debounce';
 
 function mapStateToProps(state, ownProps) {
   const { type, items } = ownProps.data;

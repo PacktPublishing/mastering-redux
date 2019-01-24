@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Panels from 'components/Panels';
+import Panels from 'components/Panel/Panels';
 import { getPanelColumns } from 'src/selectors';
 import { getLeagueData } from 'src/league/league';
 import { getTeamData } from 'src/team/team';

@@ -16,10 +16,9 @@ const done = () =>
     console.log('BUILD COMPLETE -- Listening @ http://localhost:3000');
   });
 
-webpack([clientConfig, serverConfig]).run((err, stats) => {
-  const clientStats = stats.toJson().children[0];
+webpack([clientConfig, serverConfig]).run(() => {
   app.use(publicPath, express.static(outputPath));
   const serverRender = require('./dist/server.js').default;
-  app.use(serverRender({ clientStats }));
+  app.use(serverRender());
   done();
 });
