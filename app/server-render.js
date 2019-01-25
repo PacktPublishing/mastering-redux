@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { ServerStyleSheet } from 'styled-components';
 import getApp from './src/getApp';
-import getStore from './src/store';
+import getStore from './src/getStore';
 
 export default () => (req, res) => {
   if (req.path !== '/favicon.ico') {

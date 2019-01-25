@@ -1,15 +1,18 @@
-const BASE_URL = '//0.0.0.0:5000';
+import axios from 'axios';
+
+const BASE_URL = 'http://0.0.0.0:5000';
 
 const defaultFetch = (entity, options) =>
-  fetch(`${BASE_URL}/${entity}`, options).then(res =>
-    res.ok ? res.json() : Promise.reject(res.status)
-  );
+  axios({
+    url: `${BASE_URL}/${entity}`,
+    ...options
+  }).then(res => res.data);
 
 const jsonFetch = method => (entity, data) =>
   defaultFetch(entity, {
     method,
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(data)
+    data: JSON.stringify(data)
   });
 
 const API = defaultFetch;

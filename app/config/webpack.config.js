@@ -24,15 +24,7 @@ module.exports = {
       filename: 'index.html',
       template: path.resolve(srcPath, 'index.html'),
       inject: 'body'
-    }),
-    new webpack.optimize.ModuleConcatenationPlugin(),
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      }
-    }),
-    new webpack.HashedModuleIdsPlugin()
+    })
   ],
   resolve: {
     alias: {
