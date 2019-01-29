@@ -1,5 +1,4 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const srcPath = path.join(__dirname, '..', 'src');
@@ -18,11 +17,6 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin([path.resolve(__dirname, '..', 'dist')], {
       allowExternal: true
-    }),
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: path.resolve(srcPath, 'index.html'),
-      inject: 'body'
     })
   ],
   resolve: {

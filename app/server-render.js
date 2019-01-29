@@ -22,7 +22,7 @@ export default (req, res) => {
           <div id="root">
            ${app}
           </div>
-          <!-- <script src="/static/main.js" defer></script> -->
+          <script src="/static/main.js" defer></script>
         </body>
       </html>`
     );

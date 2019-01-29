@@ -43,7 +43,6 @@ class PanelInput extends React.PureComponent {
       >
         <Input
           {...this.props}
-          autoFocus
           autoComplete="off"
           onFocus={() => this.setState({ focused: true })}
           onBlur={() => this.setState({ focused: false })}
