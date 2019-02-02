@@ -13,7 +13,7 @@ export const UPDATE_LEAGUE_NAME = `mastering-redux/${reducerName}/UPDATE_LEAGUE_
 
 export const initialState = {
   data: {},
-  active: null,
+  active: 1,
   loading: false
 };
 
@@ -76,7 +76,15 @@ export const updateLeagueName = createAction(
 
 // packs
 
-export const getLeagueData = () => ({
+export const getLeagueData = (onSuccess, onError) => ({
   type: GET_LEAGUE_DATA,
-  promise: API('leagues')
+  promise: API('leagues'),
+  meta: {
+    onSuccess,
+    onError
+  }
 });
+
+// data-fetching thunks
+export const getLeagueDataThunk = dispatch =>
+  new Promise((resolve, reject) => dispatch(getLeagueData(resolve, reject)));

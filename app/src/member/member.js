@@ -3,7 +3,6 @@ import { createAction } from 'redux-actions';
 import { handle } from 'redux-pack';
 import reducerRegistry from 'src/reducerRegistry';
 import API from 'src/api.service';
-import { call, put, select } from 'redux-saga/effects';
 import { getInfoDetails, getInfoEntityDataItem } from 'src/selectors';
 
 const reducerName = 'member';
@@ -94,9 +93,13 @@ export const setMemberWithDetailsEntry = createAction(
 
 // packs
 
-export const getMemberData = () => ({
+export const getMemberData = (onSuccess, onError) => ({
   type: GET_MEMBER_DATA,
-  promise: API('members')
+  promise: API('members'),
+  meta: {
+    onSuccess,
+    onError
+  }
 });
 
 export const createMemberAndDetails = ({ teamId }) => {
@@ -122,7 +125,11 @@ export const updateMemberName = (name, memberId) => ({
 });
 
 // data-fetching thunks
-export const getMemberAndDetails = async (dispatch, getState) => {
+
+export const getMemberDataThunk = dispatch =>
+  new Promise((resolve, reject) => dispatch(getMemberData(resolve, reject)));
+
+export const getMemberAndDetailsThunk = async (dispatch, getState) => {
   const state = getState();
   const { location } = state;
   const { level, id } = location.payload;
@@ -137,5 +144,4 @@ export const getMemberAndDetails = async (dispatch, getState) => {
       dispatch(setMemberWithDetailsEntry({ entity: entityItem, details }));
     }
   }
-  return Promise.resolve();
 };

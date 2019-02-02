@@ -17,7 +17,7 @@ const defaultTeam = { name: 'New Team' };
 
 export const initialState = {
   data: {},
-  active: null,
+  active: 1,
   loading: false
 };
 
@@ -107,9 +107,13 @@ export const setActiveTeam = createAction(SET_ACTIVE_TEAM, team => team.id);
 
 // thunk
 
-export const getTeamData = () => ({
+export const getTeamData = (onSuccess, onError) => ({
   type: GET_TEAM_DATA,
-  promise: API('teams')
+  promise: API('teams'),
+  meta: {
+    onSuccess,
+    onError
+  }
 });
 
 export const addTeam = ({ leagueId }) => {
@@ -124,3 +128,7 @@ export const updateTeamName = (name, teamId) => ({
   type: UPDATE_TEAM_NAME,
   promise: API.patch(`teams/${teamId}`, { name })
 });
+
+// data-fetching thunks
+export const getTeamDataThunk = dispatch =>
+  new Promise((resolve, reject) => dispatch(getTeamData(resolve, reject)));
