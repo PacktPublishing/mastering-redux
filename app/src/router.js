@@ -2,6 +2,7 @@ import { connectRoutes } from 'redux-first-router';
 import Home from 'components/Home';
 import Panel from 'components/Panel/Panels.container';
 import Info from 'components/Info/Info.container';
+import { getMemberAndDetails } from 'src/member/member';
 
 export const routesMap = {
   HOME_ROUTE: {
@@ -14,9 +15,9 @@ export const routesMap = {
   },
   INFO_ROUTE: {
     path: '/app/:level/:id/info',
-    component: Info
+    component: Info,
+    thunk: getMemberAndDetails
   }
 };
 
-export default initialEntries =>
-  connectRoutes(routesMap, { initialDispatch: false, initialEntries });
+export default initialEntries => connectRoutes(routesMap, { initialEntries });

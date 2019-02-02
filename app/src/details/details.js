@@ -38,7 +38,10 @@ export default function reducer(state = initialState, action) {
     case SET_MEMBER_WITH_DETAILS_ENTRY: {
       const { details } = action.payload;
       return produce(state, draft => {
-        draft.data = details;
+        draft.data = details.reduce(
+          (acc, next) => ({ ...acc, [next.id]: next }),
+          {}
+        );
       });
     }
     default:

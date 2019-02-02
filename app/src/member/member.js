@@ -3,6 +3,8 @@ import { createAction } from 'redux-actions';
 import { handle } from 'redux-pack';
 import reducerRegistry from 'src/reducerRegistry';
 import API from 'src/api.service';
+import { call, put, select } from 'redux-saga/effects';
+import { getInfoDetails, getInfoEntityDataItem } from 'src/selectors';
 
 const reducerName = 'member';
 
@@ -118,3 +120,22 @@ export const updateMemberName = (name, memberId) => ({
   type: UPDATE_MEMBER_NAME,
   promise: API.patch(`members/${memberId}`, { name })
 });
+
+// data-fetching thunks
+export const getMemberAndDetails = async (dispatch, getState) => {
+  const state = getState();
+  const { location } = state;
+  const { level, id } = location.payload;
+  let entityItem = getInfoEntityDataItem(state);
+  if (level === 'member') {
+    if (!entityItem) {
+      entityItem = await API(`${level}s/${id}`);
+    }
+    const entry = getInfoDetails(state);
+    if (entry === null) {
+      const details = await API('details');
+      dispatch(setMemberWithDetailsEntry({ entity: entityItem, details }));
+    }
+  }
+  return Promise.resolve();
+};
