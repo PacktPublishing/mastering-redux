@@ -3,7 +3,7 @@ import { middleware as reduxPackMiddleware } from 'redux-pack';
 import reducerRegistry from 'src/reducerRegistry';
 import getLocation from 'src/router';
 
-export default async (preloadedState, initialEntries) => {
+export default async (preloadedState, initialEntries, extra) => {
   const composeEnhancers =
     (process.env.NODE_ENV === 'development' &&
       typeof window !== 'undefined' &&
@@ -15,7 +15,7 @@ export default async (preloadedState, initialEntries) => {
     middleware: locationMiddleware,
     enhancer: locationEnhancer,
     thunk: locationThunk
-  } = getLocation(initialEntries);
+  } = getLocation(initialEntries, extra);
 
   reducerRegistry.register('location', locationReducer);
 

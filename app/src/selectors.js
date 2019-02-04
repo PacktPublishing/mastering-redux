@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect';
-import cache from 'src/cache.service';
 
 const getActiveLeague = state => state.league.active;
 const getLeaguesLoading = state => state.league && state.league.loading;
@@ -9,11 +8,14 @@ const getTeamsLoading = state => state.team && state.team.loading;
 
 const getMembersLoading = state => state.member && state.member.loading;
 
-export const getLeaguesIds = () => Array.from(cache.keys('leagues'));
+const getCache = (state, cache) => cache;
+
+export const getLeaguesIds = (state, cache) =>
+  Array.from(cache.keys('leagues'));
 
 export const getActiveTeamsIds = createSelector(
-  [getActiveLeague, getTeamsLoading],
-  (activeLeague, loading) => {
+  [getActiveLeague, getTeamsLoading, getCache],
+  (activeLeague, loading, cache) => {
     if (loading) return [];
 
     return Array.from(cache.values('teams'))
@@ -23,8 +25,8 @@ export const getActiveTeamsIds = createSelector(
 );
 
 export const getActiveMembersIds = createSelector(
-  [getActiveTeam, getMembersLoading],
-  (activeTeam, loading) => {
+  [getActiveTeam, getMembersLoading, getCache],
+  (activeTeam, loading, cache) => {
     if (loading) return [];
 
     return Array.from(cache.values('members'))
@@ -61,10 +63,9 @@ export const getPanelColumns = createSelector(
   ]
 );
 
-export const getInfoDetails = payload => {
+export const getInfoDetails = (payload, cache) => {
   const { level, id } = payload;
   const detailsList = Array.from(cache.get('details'));
-  console.log(detailsList);
   const entry = detailsList.find(e => e[`_${level}Id`] === parseInt(id, 10));
   return entry || null;
 };

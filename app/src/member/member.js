@@ -4,7 +4,6 @@ import reducerRegistry from 'src/reducerRegistry';
 import API from 'src/api.service';
 import { getInfoDetails, getInfoEntityDataItem } from 'src/selectors';
 import { setDetailsLoading } from 'src/details/details';
-import cache from 'src/cache.service';
 
 const reducerName = 'member';
 
@@ -65,18 +64,18 @@ reducerRegistry.register(reducerName, reducer);
 
 // packs
 
-export const getMemberData = (onSuccess, onError) => ({
+export const getMemberData = (onSuccess, onError, cache) => ({
   type: GET_MEMBER_DATA,
-  promise: API('members'),
+  promise: API('members', undefined, cache),
   meta: {
     onSuccess,
     onError
   }
 });
 
-export const createMemberAndDetails = ({ teamId }) => {
+export const createMemberAndDetails = ({ teamId }, cache) => {
   const member = { ...defaultMember, teamId };
-  const promise = API.post('members', member).then(memberResponse => {
+  const promise = API.post('members', member, cache).then(memberResponse => {
     const entry = { ...defaultDetails, _memberId: memberResponse.id };
     return API.post('details', entry).then(entryResponse => {
       const newMember = { ...member, id: memberResponse.id };
@@ -91,29 +90,35 @@ export const createMemberAndDetails = ({ teamId }) => {
   };
 };
 
-export const updateMemberName = (name, memberId) => ({
+export const updateMemberName = (name, memberId, cache) => ({
   type: UPDATE_MEMBER_NAME,
-  promise: API.patch(`members/${memberId}`, { name })
+  promise: API.patch(`members/${memberId}`, { name }, cache)
 });
 
 // data-fetching thunks
 
-export const getMemberDataThunk = dispatch =>
-  new Promise((resolve, reject) => dispatch(getMemberData(resolve, reject)));
+export const getMemberDataThunk = (dispatch, getState, { extra }) =>
+  new Promise((resolve, reject) =>
+    dispatch(getMemberData(resolve, reject, extra.cache))
+  );
 
-export const getMemberAndDetailsThunk = async (dispatch, getState) => {
+export const getMemberAndDetailsThunk = async (
+  dispatch,
+  getState,
+  { extra }
+) => {
   const state = getState();
   const { location } = state;
   const { level, id } = location.payload;
-  let entityItem = cache.get(`${level}s`, id);
+  let entityItem = extra.cache.get(`${level}s`, id);
   if (level === 'member') {
     if (!entityItem) {
-      await API(`${level}s/${id}`);
+      await API(`${level}s/${id}`, undefined, extra.cache);
     }
-    const entry = getInfoDetails(location.payload);
+    const entry = getInfoDetails(location.payload, extra.cache);
     if (entry === null) {
       dispatch(setDetailsLoading(true));
-      await API('details');
+      await API('details', undefined, extra.cache);
       dispatch(setDetailsLoading(false));
     }
   }

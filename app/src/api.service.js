@@ -1,9 +1,8 @@
 import axios from 'axios';
-import cache from 'src/cache.service';
 
 const BASE_URL = 'http://0.0.0.0:5000';
 
-const defaultFetch = (entity, url, options) =>
+const defaultFetch = (entity, url, cache, options) =>
   axios({
     url: `${BASE_URL}/${url}`,
     ...options
@@ -11,9 +10,9 @@ const defaultFetch = (entity, url, options) =>
     .then(res => res.data)
     .then(data => cache.set(entity, data) || data);
 
-const jsonFetch = method => (url, data) => {
+const jsonFetch = method => (url, data, cache) => {
   const [entity] = url.split('/');
-  return defaultFetch(entity, url, {
+  return defaultFetch(entity, url, cache, {
     method,
     headers: { 'content-type': 'application/json' },
     data: JSON.stringify(data)

@@ -92,28 +92,30 @@ export const setActiveTeam = createAction(SET_ACTIVE_TEAM, team => team.id);
 
 // thunk
 
-export const getTeamData = (onSuccess, onError) => ({
+export const getTeamData = (onSuccess, onError, cache) => ({
   type: GET_TEAM_DATA,
-  promise: API('teams'),
+  promise: API('teams', undefined, cache),
   meta: {
     onSuccess,
     onError
   }
 });
 
-export const addTeam = ({ leagueId }) => {
+export const addTeam = ({ leagueId }, cache) => {
   const team = { ...defaultTeam, leagueId };
   return {
     type: ADD_TEAM,
-    promise: API.post('teams', team)
+    promise: API.post('teams', team, cache)
   };
 };
 
-export const updateTeamName = (name, teamId) => ({
+export const updateTeamName = (name, teamId, cache) => ({
   type: UPDATE_TEAM_NAME,
-  promise: API.patch(`teams/${teamId}`, { name })
+  promise: API.patch(`teams/${teamId}`, { name }, cache)
 });
 
 // data-fetching thunks
-export const getTeamDataThunk = dispatch =>
-  new Promise((resolve, reject) => dispatch(getTeamData(resolve, reject)));
+export const getTeamDataThunk = (dispatch, getState, { extra }) =>
+  new Promise((resolve, reject) =>
+    dispatch(getTeamData(resolve, reject, extra.cache))
+  );

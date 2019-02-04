@@ -62,9 +62,9 @@ export const updateLeagueName = createAction(
 
 // packs
 
-export const getLeagueData = (onSuccess, onError) => ({
+export const getLeagueData = (onSuccess, onError, cache) => ({
   type: GET_LEAGUE_DATA,
-  promise: API('leagues'),
+  promise: API('leagues', undefined, cache),
   meta: {
     onSuccess,
     onError
@@ -72,5 +72,7 @@ export const getLeagueData = (onSuccess, onError) => ({
 });
 
 // data-fetching thunks
-export const getLeagueDataThunk = dispatch =>
-  new Promise((resolve, reject) => dispatch(getLeagueData(resolve, reject)));
+export const getLeagueDataThunk = (dispatch, getState, { extra }) =>
+  new Promise((resolve, reject) =>
+    dispatch(getLeagueData(resolve, reject, extra.cache))
+  );

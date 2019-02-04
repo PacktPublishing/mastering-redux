@@ -20,7 +20,7 @@ function ColumnItem(props) {
     >
       <Ui.PanelInput
         type="text"
-        value={item.name}
+        defaultValue={item.name}
         active={isActive}
         onChange={e => updateName(e.target.value, item, type)}
       />

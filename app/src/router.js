@@ -33,4 +33,5 @@ export const routesMap = {
   }
 };
 
-export default initialEntries => connectRoutes(routesMap, { initialEntries });
+export default (initialEntries, extra) =>
+  connectRoutes(routesMap, { initialEntries, extra });
