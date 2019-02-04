@@ -6,11 +6,11 @@ import { patchDetailsEntry } from 'src/details/details';
 import { getMemberData } from 'src/member/member';
 
 const mapStateToProps = state => {
-  const { id, level } = getLocationPayload(state);
+  const { payload } = state.location;
   return {
-    id,
-    name: level,
-    details: getInfoDetails(state)
+    id: payload.id,
+    name: payload.level,
+    details: getInfoDetails(payload)
   };
 };
 

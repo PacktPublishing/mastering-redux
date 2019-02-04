@@ -1,48 +1,48 @@
 import produce from 'immer';
 import { handle } from 'redux-pack';
+import { createAction } from 'redux-actions';
+
 import reducerRegistry from 'src/reducerRegistry';
 import API from 'src/api.service';
-import {
-  CREATE_MEMBER_AND_DETAILS,
-  SET_MEMBER_WITH_DETAILS_ENTRY
-} from 'src/member/member';
+import { CREATE_MEMBER_AND_DETAILS } from 'src/member/member';
 
 const reducerName = 'details';
 
 export const EDIT_DETAILS_ENTRY = `mastering-redux/${reducerName}/EDIT_DETAILS_ENTRY`;
+export const SET_DETAILS_LOADING = `mastering-redux/${reducerName}/SET_DETAILS_LOADING`;
 
 export const initialState = {
-  data: {}
+  loading: false
 };
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case CREATE_MEMBER_AND_DETAILS: {
       return handle(state, action, {
-        success: s =>
+        start: s =>
           produce(s, draft => {
-            const { entry } = action.payload;
-            draft.data[entry.id] = entry;
+            draft.loading = true;
+          }),
+        finish: s =>
+          produce(s, draft => {
+            draft.loading = false;
           })
       });
     }
     case EDIT_DETAILS_ENTRY: {
       return handle(state, action, {
-        success: s =>
+        start: s =>
           produce(s, draft => {
-            const entry = action.payload;
-            Object.assign(draft.data[entry.id], entry);
+            draft.loading = true;
+          }),
+        finish: s =>
+          produce(s, draft => {
+            draft.loading = false;
           })
       });
     }
-    case SET_MEMBER_WITH_DETAILS_ENTRY: {
-      const { details } = action.payload;
-      return produce(state, draft => {
-        draft.data = details.reduce(
-          (acc, next) => ({ ...acc, [next.id]: next }),
-          {}
-        );
-      });
+    case SET_DETAILS_LOADING: {
+      return { ...state, loading: action.payload };
     }
     default:
       return state;
@@ -50,6 +50,8 @@ export default function reducer(state = initialState, action) {
 }
 
 reducerRegistry.register(reducerName, reducer);
+
+export const setDetailsLoading = createAction(SET_DETAILS_LOADING);
 
 // packs
 

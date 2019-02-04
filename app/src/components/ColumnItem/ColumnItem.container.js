@@ -5,11 +5,12 @@ import { addTeam, setActiveTeam, updateTeamName } from 'src/team/team';
 import { createMemberAndDetails, updateMemberName } from 'src/member/member';
 import { setActiveLeague, updateLeagueName } from 'src/league/league';
 import debounce from 'lodash/debounce';
+import cache from 'src/cache.service';
 
 function mapStateToProps(state, ownProps) {
   const { type, items } = ownProps.data;
   const id = items[ownProps.index];
-  const item = state[type].data[id];
+  const item = cache.get(`${type}s`, id);
   const activeId = state[type].active;
   return { item, type, id, activeId };
 }

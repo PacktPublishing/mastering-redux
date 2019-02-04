@@ -1,21 +1,20 @@
 import produce from 'immer';
-import { createAction } from 'redux-actions';
 import { handle } from 'redux-pack';
 import reducerRegistry from 'src/reducerRegistry';
 import API from 'src/api.service';
 import { getInfoDetails, getInfoEntityDataItem } from 'src/selectors';
+import { setDetailsLoading } from 'src/details/details';
+import cache from 'src/cache.service';
 
 const reducerName = 'member';
 
 export const GET_MEMBER_DATA = `mastering-redux/${reducerName}/GET_MEMBER_DATA`;
 export const CREATE_MEMBER_AND_DETAILS = `mastering-redux/${reducerName}/CREATE_MEMBER_AND_DETAILS`;
 export const UPDATE_MEMBER_NAME = `mastering-redux/${reducerName}/UPDATE_MEMBER_NAME`;
-export const SET_MEMBER_WITH_DETAILS_ENTRY = `mastering-redux/${reducerName}/SET_MEMBER_WITH_DETAILS_ENTRY`;
 
 const defaultMember = { name: 'New Member' };
 const defaultDetails = { bio: '', age: '' };
 export const initialState = {
-  data: {},
   loading: false
 };
 
@@ -30,13 +29,6 @@ export default function reducer(state = initialState, action) {
         finish: s =>
           produce(s, draft => {
             draft.loading = false;
-          }),
-        success: s =>
-          produce(s, draft => {
-            draft.data = {};
-            action.payload.forEach(item => {
-              draft.data[item.id] = item;
-            });
           })
       });
     }
@@ -49,11 +41,6 @@ export default function reducer(state = initialState, action) {
         finish: s =>
           produce(s, draft => {
             draft.loading = false;
-          }),
-        success: s =>
-          produce(s, draft => {
-            const { member } = action.payload;
-            draft.data[member.id] = { ...defaultMember, ...member };
           })
       });
     }
@@ -66,18 +53,7 @@ export default function reducer(state = initialState, action) {
         finish: s =>
           produce(s, draft => {
             draft.loading = false;
-          }),
-        success: s =>
-          produce(s, draft => {
-            const { name, id } = action.payload;
-            draft.data[id].name = name;
           })
-      });
-    }
-    case SET_MEMBER_WITH_DETAILS_ENTRY: {
-      const { entity } = action.payload;
-      return produce(state, draft => {
-        draft.data[entity.id] = entity;
       });
     }
     default:
@@ -86,10 +62,6 @@ export default function reducer(state = initialState, action) {
 }
 
 reducerRegistry.register(reducerName, reducer);
-
-export const setMemberWithDetailsEntry = createAction(
-  SET_MEMBER_WITH_DETAILS_ENTRY
-);
 
 // packs
 
@@ -133,15 +105,16 @@ export const getMemberAndDetailsThunk = async (dispatch, getState) => {
   const state = getState();
   const { location } = state;
   const { level, id } = location.payload;
-  let entityItem = getInfoEntityDataItem(state);
+  let entityItem = cache.get(`${level}s`, id);
   if (level === 'member') {
     if (!entityItem) {
-      entityItem = await API(`${level}s/${id}`);
+      await API(`${level}s/${id}`);
     }
-    const entry = getInfoDetails(state);
+    const entry = getInfoDetails(location.payload);
     if (entry === null) {
-      const details = await API('details');
-      dispatch(setMemberWithDetailsEntry({ entity: entityItem, details }));
+      dispatch(setDetailsLoading(true));
+      await API('details');
+      dispatch(setDetailsLoading(false));
     }
   }
 };

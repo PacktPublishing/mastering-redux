@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom/server';
 import { ServerStyleSheet } from 'styled-components';
 import getApp from './src/getApp';
 import getStore from './src/getStore';
+import cache from './src/cache.service';
 
 export default async (req, res) => {
   if (req.path !== '/favicon.ico') {
@@ -16,9 +17,10 @@ export default async (req, res) => {
           ${styleTags}
         </head>
         <body>
-          <script>window.REDUX_STATE = ${JSON.stringify(
-            store.getState()
-          )}</script>
+          <script>
+            window.REDUX_STATE = ${JSON.stringify(store.getState())}
+            window.CACHE_DATA = ${cache.save()}
+          </script>
           <div id="root">
            ${app}
           </div>

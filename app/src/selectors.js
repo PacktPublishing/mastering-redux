@@ -1,42 +1,35 @@
 import { createSelector } from 'reselect';
+import cache from 'src/cache.service';
 
 const getActiveLeague = state => state.league.active;
-const getAllLeagues = state => state.league && state.league.data;
 const getLeaguesLoading = state => state.league && state.league.loading;
 
 const getActiveTeam = state => state.team.active;
-const getAllTeams = state => state.team && state.team.data;
 const getTeamsLoading = state => state.team && state.team.loading;
 
-const getAllMembers = state => state.member && state.member.data;
-const getMembesrLoading = state => state.member && state.member.loading;
+const getMembersLoading = state => state.member && state.member.loading;
 
-export const getLocationPayload = state => state.location.payload;
-
-const getAllDetails = state => state.details && state.details.data;
-
-export const getLeaguesIds = createSelector(
-  getAllLeagues,
-  (leagues = {}) => Object.keys(leagues)
-);
+export const getLeaguesIds = () => Array.from(cache.keys('leagues'));
 
 export const getActiveTeamsIds = createSelector(
-  [getActiveLeague, getAllTeams],
-  (activeLeague, teams = {}) => {
-    const activeTeams = Object.values(teams).filter(
-      t => t.leagueId === activeLeague
-    );
-    return activeTeams.map(t => t.id);
+  [getActiveLeague, getTeamsLoading],
+  (activeLeague, loading) => {
+    if (loading) return [];
+
+    return Array.from(cache.values('teams'))
+      .filter(t => t.leagueId === activeLeague)
+      .map(t => t.id);
   }
 );
 
 export const getActiveMembersIds = createSelector(
-  [getActiveTeam, getAllMembers],
-  (activeTeam, members = {}) => {
-    const activeMembers = Object.values(members).filter(
-      m => m.teamId === activeTeam
-    );
-    return activeMembers.map(m => m.id);
+  [getActiveTeam, getMembersLoading],
+  (activeTeam, loading) => {
+    if (loading) return [];
+
+    return Array.from(cache.values('members'))
+      .filter(m => m.teamId === activeTeam)
+      .map(m => m.id);
   }
 );
 
@@ -47,7 +40,7 @@ export const getPanelColumns = createSelector(
     getActiveMembersIds,
     getLeaguesLoading,
     getTeamsLoading,
-    getMembesrLoading
+    getMembersLoading
   ],
   (leagues, teams, members, leaguesLoading, teamsLoading, membersLoading) => [
     {
@@ -68,22 +61,10 @@ export const getPanelColumns = createSelector(
   ]
 );
 
-export const getInfoEntityDataItem = createSelector(
-  [getAllLeagues, getAllTeams, getAllMembers, getLocationPayload],
-  (league, team, member, payload) => {
-    const { level, id } = payload;
-    const entities = { league, team, member };
-    return entities[level] && entities[level][id];
-  }
-);
-
-export const getInfoDetails = createSelector(
-  [getLocationPayload, getAllDetails],
-  (payload, details) => {
-    if (!details) return null;
-    const { level, id } = payload;
-    const detailsList = details ? Object.values(details) : [];
-    const entry = detailsList.find(e => e[`_${level}Id`] === parseInt(id, 10));
-    return entry || null;
-  }
-);
+export const getInfoDetails = payload => {
+  const { level, id } = payload;
+  const detailsList = Array.from(cache.get('details'));
+  console.log(detailsList);
+  const entry = detailsList.find(e => e[`_${level}Id`] === parseInt(id, 10));
+  return entry || null;
+};

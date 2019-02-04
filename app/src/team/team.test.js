@@ -11,30 +11,11 @@ import { SET_ACTIVE_LEAGUE } from 'src/league/league';
 import { CREATE_MEMBER_AND_DETAILS } from 'src/member/member';
 
 const defaultState = {
-  ...initialState,
-  data: {
-    1: { id: 1, name: 'Team 1', leagueId: 1 }
-  }
+  ...initialState
 };
 
 describe('Team reducer', () => {
   const state = { ...defaultState, active: 2 };
-
-  it(`Test ${GET_TEAM_DATA} action`, () => {
-    const array = [
-      { id: 1, name: 'Team 1', leagueId: 1 },
-      { id: 2, name: 'Team 2', leagueId: 2 }
-    ];
-    const action = makePackAction(LIFECYCLE.SUCCESS, {
-      type: GET_TEAM_DATA,
-      payload: array
-    });
-    const newState = reducer(state, action);
-    expect(newState.data).toEqual({
-      1: array[0],
-      2: array[1]
-    });
-  });
 
   it(`Test ${SET_ACTIVE_TEAM} action`, () => {
     const action = { type: SET_ACTIVE_TEAM, payload: 1 };
@@ -49,7 +30,7 @@ describe('Team reducer', () => {
   });
 
   it(`Test ${ADD_TEAM} action`, () => {
-    const teamId = Object.keys(defaultState.data).length + 1;
+    const teamId = 2;
     const newTeam = { id: teamId, leagueId: 5 };
     const action = makePackAction(LIFECYCLE.SUCCESS, {
       type: ADD_TEAM,
@@ -58,8 +39,7 @@ describe('Team reducer', () => {
     const newState = reducer(state, action);
     expect(newState).toEqual({
       ...state,
-      active: null,
-      data: { ...state.data, [teamId]: { name: 'New Team', ...newTeam } }
+      active: null
     });
   });
 
@@ -74,16 +54,5 @@ describe('Team reducer', () => {
       ...state,
       active: 3
     });
-  });
-
-  test(`Test ${UPDATE_TEAM_NAME} action`, () => {
-    const name = `test_team`;
-    const action = makePackAction(LIFECYCLE.SUCCESS, {
-      type: UPDATE_TEAM_NAME,
-      payload: { id: 1, name }
-    });
-    const newState = reducer(defaultState, action);
-    const updated = newState.data[1];
-    expect(updated.name).toMatch(name);
   });
 });

@@ -12,7 +12,6 @@ export const SET_ACTIVE_LEAGUE = `mastering-redux/${reducerName}/SET_ACTIVE_LEAG
 export const UPDATE_LEAGUE_NAME = `mastering-redux/${reducerName}/UPDATE_LEAGUE_NAME`;
 
 export const initialState = {
-  data: {},
   active: 1,
   loading: false
 };
@@ -28,25 +27,12 @@ export default function reducer(state = initialState, action) {
         finish: s =>
           produce(s, draft => {
             draft.loading = false;
-          }),
-        success: s =>
-          produce(s, draft => {
-            action.payload.forEach(item => {
-              draft.data[item.id] = item;
-            });
           })
       });
     }
     case SET_ACTIVE_LEAGUE: {
       return produce(state, draft => {
         draft.active = action.payload;
-      });
-    }
-    case UPDATE_LEAGUE_NAME: {
-      const { name, leagueId } = action.payload;
-      return produce(state, draft => {
-        const league = draft.data[leagueId];
-        league.name = name;
       });
     }
     case ADD_TEAM: {

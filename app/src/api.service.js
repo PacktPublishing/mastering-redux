@@ -1,21 +1,26 @@
 import axios from 'axios';
+import cache from 'src/cache.service';
 
 const BASE_URL = 'http://0.0.0.0:5000';
 
-const defaultFetch = (entity, options) =>
+const defaultFetch = (entity, url, options) =>
   axios({
-    url: `${BASE_URL}/${entity}`,
+    url: `${BASE_URL}/${url}`,
     ...options
-  }).then(res => res.data);
+  })
+    .then(res => res.data)
+    .then(data => cache.set(entity, data) || data);
 
-const jsonFetch = method => (entity, data) =>
-  defaultFetch(entity, {
+const jsonFetch = method => (url, data) => {
+  const [entity] = url.split('/');
+  return defaultFetch(entity, url, {
     method,
     headers: { 'content-type': 'application/json' },
     data: JSON.stringify(data)
   });
+};
 
-const API = defaultFetch;
+const API = jsonFetch('GET');
 
 API.post = jsonFetch('POST');
 API.put = jsonFetch('PUT');

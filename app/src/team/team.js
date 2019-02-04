@@ -16,7 +16,6 @@ export const UPDATE_TEAM_NAME = `mastering-redux/${reducerName}/UPDATE_TEAM_NAME
 const defaultTeam = { name: 'New Team' };
 
 export const initialState = {
-  data: {},
   active: 1,
   loading: false
 };
@@ -32,13 +31,6 @@ export default function reducer(state = initialState, action) {
         finish: s =>
           produce(s, draft => {
             draft.loading = false;
-          }),
-        success: s =>
-          produce(s, draft => {
-            draft.data = {};
-            action.payload.forEach(item => {
-              draft.data[item.id] = item;
-            });
           })
       });
     }
@@ -64,8 +56,6 @@ export default function reducer(state = initialState, action) {
           }),
         success: s =>
           produce(s, draft => {
-            const team = action.payload;
-            draft.data[team.id] = { ...defaultTeam, ...team };
             draft.active = null;
           })
       });
@@ -88,11 +78,6 @@ export default function reducer(state = initialState, action) {
         finish: s =>
           produce(s, draft => {
             draft.loading = false;
-          }),
-        success: s =>
-          produce(s, draft => {
-            const { name, id } = action.payload;
-            draft.data[id].name = name;
           })
       });
     }
