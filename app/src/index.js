@@ -6,7 +6,11 @@ import Cache from 'src/cache.service';
 
 async function startApp() {
   const cache = new Cache();
-  cache.load(window.CACHE_DATA);
+  if (navigator.onLine) {
+    cache.load(window.CACHE_DATA);
+  } else {
+    await cache.loadFromIndexedDB();
+  }
   const store = await getStore(window.REDUX_STATE, undefined, { cache });
   ReactDOM.hydrate(getApp(store, cache), document.getElementById('root'));
 }
