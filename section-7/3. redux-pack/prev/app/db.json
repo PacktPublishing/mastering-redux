@@ -1,0 +1,46 @@
+{
+  "leagues": [
+    {
+      "id": 1,
+      "name": "League 1"
+    },
+    {
+      "id": 2,
+      "name": "League 2"
+    }
+  ],
+  "teams": [
+    {
+      "id": 1,
+      "name": "Team 1",
+      "leagueId": 1
+    }
+  ],
+  "members": [
+    {
+      "id": 1,
+      "name": "Member 1",
+      "teamId": 1,
+      "detailsId": 1
+    },
+    {
+      "name": "New Member",
+      "teamId": 1,
+      "id": 2
+    }
+  ],
+  "details": [
+    {
+      "id": 1,
+      "bio": "Lorem ipsum",
+      "age": "21",
+      "_memberId": 1
+    },
+    {
+      "bio": "",
+      "age": "",
+      "_memberId": 2,
+      "id": 2
+    }
+  ]
+}

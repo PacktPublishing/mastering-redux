@@ -1,0 +1,46 @@
+{
+  "name": "members-teams-leagues",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "immer": "^1.7.4",
+    "json-server": "^0.14.2",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-redux": "^5.1.0",
+    "react-scripts": "2.0.5",
+    "react-styled-flexboxgrid": "^2.6.0",
+    "react-window": "^1.2.4",
+    "redux": "^4.0.1",
+    "redux-actions": "^2.6.4",
+    "redux-first-router": "^2.1.1",
+    "redux-first-router-link": "^1.4.2",
+    "redux-thunk": "^2.3.0",
+    "reselect": "^4.0.0",
+    "styled-components": "^4.0.2"
+  },
+  "scripts": {
+    "start": "npm-run-all -p start:app start:server",
+    "start:app": "react-app-rewired start",
+    "start:server": "json-server --watch -p 5000 db.json",
+    "build": "react-app-rewired build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "babel-plugin-styled-components": "^1.8.0",
+    "customize-cra": "^0.2.3",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.15.2",
+    "react-app-rewired": "^1.6.2"
+  }
+}

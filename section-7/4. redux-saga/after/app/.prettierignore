@@ -1,0 +1,5 @@
+**/*.ejs
+**/*.json
+.prettierrc
+.prettierignore
+**/node_modules/*

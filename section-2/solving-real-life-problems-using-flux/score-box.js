@@ -11,13 +11,12 @@ ScoreBox.prototype.render = function render() {
   this.el.textContent = state[this.id];
 };
 
+
 ScoreBox.prototype.getData = function getData() {
   fetch(`${window.API_URL}/score`)
     .then(res => res.json())
-    .then(data =>
-      this.store.dispatch({
-        type: "SCORE_BOX__SET_DATA",
-        payload: { id: this.id, data }
-      })
-    );
+    .then(data => this.store.dispatch({
+      type: 'SCORE_BOX__SET_DATA',
+      payload: { id: this.id, data }
+    }));
 };

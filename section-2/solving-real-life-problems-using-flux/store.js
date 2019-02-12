@@ -6,7 +6,7 @@ function Store(initialState, reducer) {
 
 Store.prototype.dispatch = function dispatch(action) {
   this.state = this.reduce(action, this.state);
-  this.subscriptions.forEach(listener => listener());
+  this.subscriptions.forEach(listener => listener())
 };
 
 Store.prototype.getState = function getState() {
@@ -22,3 +22,6 @@ Store.prototype.subscribe = function subscribe(listener) {
 
   return unsubscribe;
 };
+
+
+

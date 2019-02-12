@@ -16,12 +16,12 @@ ScoreBox.prototype.render = function render() {
 
 ScoreBox.prototype.update = function update() {
   const detail = { score: this.score };
-  const event = new CustomEvent("update", { detail });
+  const event = new CustomEvent('update', { detail });
   this.el.dispatchEvent(event);
 };
 
 ScoreBox.prototype.getData = function getData() {
   fetch(`${window.API_URL}/score`)
     .then(res => res.json())
-    .then(data => this.setScore(data));
+    .then(data => this.setScore(data))
 };
